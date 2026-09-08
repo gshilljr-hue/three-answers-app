@@ -1,0 +1,1862 @@
+<meta charset="utf-8">
+<title>Three Answers to c4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#E8E1C8" media="(prefers-color-scheme: light)" data-pwa>
+<meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" data-pwa>
+<meta name="mobile-web-app-capable" content="yes" data-pwa>
+<meta name="apple-mobile-web-app-capable" content="yes" data-pwa>
+<meta name="apple-mobile-web-app-status-bar-style" content="default" data-pwa>
+<meta name="apple-mobile-web-app-title" content="Three Answers" data-pwa>
+<meta name="application-name" content="Three Answers" data-pwa>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E8E1C8;
+    --paper-2:#DDD3B3;
+    --panel:#F1EBD7;
+    --ink:#241F17;
+    --ink-soft:#5C5340;
+    --ink-faint:#8A8069;
+    --walnut:#5B3A21;
+    --walnut-deep:#3A2414;
+    --brass:#8C6A22;
+    --brass-strong:#6E5119;
+    --brass-tint:#F3E2B0;
+    --moss:#3E6A3A;
+    --moss-tint:#DDEBD4;
+    --garnet:#8B2E33;
+    --garnet-tint:#F4DCDA;
+    --board-light:#EFE6CB;
+    --board-dark:#8A5A34;
+    --board-border:#3A2414;
+    --focus:#8C6A22;
+    --shadow: 0 1px 2px rgba(58,36,20,.12), 0 6px 20px rgba(58,36,20,.10);
+    --radius: 10px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#171310;
+      --paper-2:#211A13;
+      --panel:#221B14;
+      --ink:#ECE3CC;
+      --ink-soft:#C1B79C;
+      --ink-faint:#8A8069;
+      --walnut:#C79A5D;
+      --walnut-deep:#E9D6A9;
+      --brass:#D9AA4C;
+      --brass-strong:#EFC470;
+      --brass-tint:#3A2C10;
+      --moss:#8AC17E;
+      --moss-tint:#1E2E1B;
+      --garnet:#E28B90;
+      --garnet-tint:#3A1B1C;
+      --board-light:#4C4133;
+      --board-dark:#241B12;
+      --board-border:#0E0A06;
+      --focus:#D9AA4C;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#171310;
+    --paper-2:#211A13;
+    --panel:#221B14;
+    --ink:#ECE3CC;
+    --ink-soft:#C1B79C;
+    --ink-faint:#8A8069;
+    --walnut:#C79A5D;
+    --walnut-deep:#E9D6A9;
+    --brass:#D9AA4C;
+    --brass-strong:#EFC470;
+    --brass-tint:#3A2C10;
+    --moss:#8AC17E;
+    --moss-tint:#1E2E1B;
+    --garnet:#E28B90;
+    --garnet-tint:#3A1B1C;
+    --board-light:#4C4133;
+    --board-dark:#241B12;
+    --board-border:#0E0A06;
+    --focus:#D9AA4C;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  [hidden]{ display:none !important; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:"Fraunces", Georgia, serif; text-wrap:balance; margin:0; }
+  .mono{ font-family:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric:tabular-nums; }
+  a{color:var(--brass)}
+  button{ font-family:inherit; }
+  ::selection{ background:var(--brass-tint); }
+  :focus-visible{ outline:2.5px solid var(--focus); outline-offset:2px; border-radius:4px; }
+
+  .app{ max-width:1180px; margin:0 auto; padding:14px 14px 48px; }
+
+  /* ---------- header ---------- */
+  .topbar{
+    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+    gap:14px; padding:14px 4px 18px; border-bottom:1.5px solid var(--paper-2);
+    margin-bottom:16px;
+  }
+  .brand .eyebrow{
+    display:block; font-family:"JetBrains Mono", monospace; font-size:.72rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--brass-strong); margin-bottom:4px;
+  }
+  .brand h1{ font-size:clamp(1.5rem, 4vw, 2.15rem); font-weight:600; line-height:1.05; }
+  .brand h1 .accent{ color:var(--garnet); font-style:italic; }
+  .opening-tabs{ display:flex; gap:6px; flex-wrap:wrap; }
+  .tab{
+    appearance:none; border:1.5px solid var(--paper-2); background:var(--panel); color:var(--ink-soft);
+    padding:9px 14px; border-radius:999px; cursor:pointer; font-size:.92rem; font-weight:600;
+    display:flex; align-items:baseline; gap:6px; transition:background .15s, color .15s, border-color .15s;
+  }
+  .tab small{ font-family:"JetBrains Mono",monospace; font-weight:500; font-size:.72rem; opacity:.75; }
+  .tab:hover{ border-color:var(--brass); color:var(--ink); }
+  .tab.active{ background:var(--walnut); border-color:var(--walnut); color:var(--brass-tint); }
+  :root[data-theme="dark"] .tab.active, @media (prefers-color-scheme:dark){ .tab.active{ color:var(--walnut-deep); } }
+
+  /* ---------- layout ---------- */
+  .layout{ display:grid; grid-template-columns:1fr; gap:20px; align-items:start; }
+  @media (min-width:900px){
+    .layout{ grid-template-columns:minmax(320px,460px) 1fr; }
+  }
+
+  .card{
+    background:var(--panel); border:1px solid var(--paper-2); border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- board column ---------- */
+  .board-column{ display:flex; flex-direction:column; gap:12px; }
+  .blurb{ padding:14px 16px; }
+  .blurb h2{ font-size:1.15rem; font-weight:600; margin-bottom:4px; }
+  .blurb p{ margin:0; color:var(--ink-soft); font-size:.94rem; line-height:1.5; }
+
+  .status-line{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    font-size:.82rem; color:var(--ink-soft); padding:0 2px;
+  }
+  .status-line .badge{
+    font-family:"JetBrains Mono",monospace; font-size:.72rem; letter-spacing:.03em; padding:3px 9px;
+    border-radius:999px; font-weight:600; text-transform:uppercase;
+  }
+  .badge.main{ background:var(--moss-tint); color:var(--moss); }
+  .badge.alt{ background:var(--brass-tint); color:var(--brass-strong); }
+  .badge.trap{ background:var(--garnet-tint); color:var(--garnet); }
+  .badge.free{ background:var(--paper-2); color:var(--ink-faint); }
+  .badge.start{ background:var(--paper-2); color:var(--ink-faint); }
+
+  .board-wrap{ display:flex; justify-content:center; padding:4px; }
+  .board{
+    display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr);
+    width:min(94vw, 440px); aspect-ratio:1; border:5px solid var(--board-border); border-radius:6px;
+    overflow:hidden; box-shadow:var(--shadow);
+  }
+  .sq{
+    position:relative; display:flex; align-items:center; justify-content:center;
+    border:none; padding:0; cursor:pointer; background:var(--board-light);
+  }
+  .sq.dark{ background:var(--board-dark); }
+  .sq .coord{
+    position:absolute; font-family:"JetBrains Mono",monospace; font-size:.6rem; font-weight:600;
+    opacity:.55; pointer-events:none;
+  }
+  .sq.light .coord{ color:var(--board-dark); }
+  .sq.dark .coord{ color:var(--board-light); }
+  .sq .coord.file{ right:3px; bottom:2px; }
+  .sq .coord.rank{ left:3px; top:2px; }
+  .sq.selected::after{
+    content:""; position:absolute; inset:0; background:var(--brass); opacity:.45;
+  }
+  .sq.lastmove::after{
+    content:""; position:absolute; inset:0; background:var(--brass); opacity:.22;
+  }
+  .sq .dot{
+    position:absolute; width:28%; height:28%; border-radius:50%; background:var(--brass); opacity:.55;
+  }
+  .sq .ring{
+    position:absolute; inset:6%; border-radius:50%; border:3.5px solid var(--garnet); opacity:.7;
+  }
+  .sq.trap-flag::before{
+    content:"⚠"; position:absolute; top:2px; left:2px; font-size:.75rem; z-index:2;
+  }
+  svg.piece{ width:82%; height:82%; position:relative; z-index:1; pointer-events:none; }
+  svg.piece.white use{ fill:#F4EEDD; stroke:#241F17; stroke-width:1.3; stroke-linejoin:round; stroke-linecap:round; }
+  svg.piece.black use{ fill:#241F17; stroke:#F4EEDD; stroke-width:1; stroke-linejoin:round; stroke-linecap:round; }
+  :root[data-theme="dark"] svg.piece.white use, @media (prefers-color-scheme:dark){ svg.piece.white use{ fill:#F4EEDD; stroke:#0E0A06; } }
+
+  .history-ribbon{
+    display:flex; gap:6px; overflow-x:auto; padding:8px 4px; scrollbar-width:thin;
+  }
+  .history-ribbon .num{ font-family:"JetBrains Mono",monospace; color:var(--ink-faint); font-size:.8rem; align-self:center; padding-right:2px; flex:none; }
+  .history-ribbon button{
+    flex:none; appearance:none; border:1px solid var(--paper-2); background:var(--paper);
+    color:var(--ink); font-family:"JetBrains Mono",monospace; font-size:.82rem; font-weight:500;
+    padding:5px 10px; border-radius:7px; cursor:pointer; white-space:nowrap;
+  }
+  .history-ribbon button.current{ background:var(--walnut); border-color:var(--walnut); color:var(--brass-tint); }
+  .history-ribbon button.empty{ color:var(--ink-faint); font-style:italic; border-style:dashed; font-family:"Source Sans 3",sans-serif; }
+
+  .controls{ display:flex; gap:8px; flex-wrap:wrap; padding:0 2px; }
+  .btn{
+    appearance:none; border:1.5px solid var(--walnut); background:var(--walnut); color:var(--brass-tint);
+    padding:9px 14px; border-radius:8px; cursor:pointer; font-weight:600; font-size:.88rem;
+    display:inline-flex; align-items:center; gap:6px; transition:filter .15s;
+  }
+  .btn:hover{ filter:brightness(1.1); }
+  .btn.ghost{ background:transparent; color:var(--ink); border-color:var(--paper-2); }
+  .btn.ghost:hover{ border-color:var(--brass); }
+  .btn.book{ background:var(--moss); border-color:var(--moss); color:#F3F8F1; width:100%; justify-content:space-between; }
+  .btn.trapchip{ background:var(--garnet); border-color:var(--garnet); color:var(--garnet-tint); }
+  .hint{ font-size:.8rem; color:var(--ink-faint); padding:0 4px; }
+
+  .banner{
+    margin:0 2px; padding:12px 14px; border-radius:9px; font-size:.9rem; line-height:1.5;
+    border:1.5px solid var(--garnet); background:var(--garnet-tint); color:var(--ink);
+  }
+  .banner b{ color:var(--garnet); }
+  .banner.ok{ border-color:var(--moss); background:var(--moss-tint); }
+  .banner.ok b{ color:var(--moss); }
+
+  /* ---------- tutor column ---------- */
+  .tutor-column{ display:flex; flex-direction:column; gap:0; }
+  .ttabs{ display:flex; gap:4px; padding:4px; background:var(--paper-2); border-radius:var(--radius) var(--radius) 0 0; }
+  .ttab{
+    flex:1; appearance:none; border:none; background:transparent; color:var(--ink-soft);
+    padding:10px 8px; border-radius:7px; cursor:pointer; font-weight:600; font-size:.86rem;
+  }
+  .ttab.active{ background:var(--panel); color:var(--ink); box-shadow:var(--shadow); }
+  .tpanels{ background:var(--panel); border:1px solid var(--paper-2); border-top:none; border-radius:0 0 var(--radius) var(--radius); min-height:340px; }
+  .tpanel{ display:none; padding:18px 20px 22px; }
+  .tpanel.active{ display:block; }
+
+  .tpanel h2{ font-size:1.05rem; font-weight:600; margin-bottom:8px; }
+  .tpanel h3{ font-size:.95rem; font-weight:600; margin:0 0 6px; color:var(--ink); }
+  .tpanel p{ line-height:1.6; color:var(--ink-soft); margin:0 0 12px; font-size:.95rem; }
+  .tag-intro{ font-size:.9rem; color:var(--ink-soft); border-left:3px solid var(--brass); padding:2px 0 2px 12px; margin-bottom:16px; }
+  .transpo-note{ font-size:.85rem; background:var(--brass-tint); color:var(--ink); border-radius:7px; padding:8px 12px; margin:0 0 12px; }
+  .transpo-note b{ color:var(--brass-strong); }
+  .step-count{ font-family:"JetBrains Mono",monospace; font-size:.78rem; color:var(--ink-faint); margin-bottom:14px; }
+
+  .alt-list{ display:flex; flex-direction:column; gap:8px; }
+  .alt-row{
+    display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1px solid var(--paper-2);
+    border-radius:8px; background:var(--paper);
+  }
+  .alt-row button.mv{
+    flex:none; font-family:"JetBrains Mono",monospace; font-weight:600; font-size:.86rem;
+    border:1.5px solid var(--brass); background:var(--brass-tint); color:var(--brass-strong);
+    padding:5px 10px; border-radius:6px; cursor:pointer;
+  }
+  .alt-row button.mv:hover{ filter:brightness(1.05); }
+  .alt-row .note{ font-size:.88rem; color:var(--ink-soft); line-height:1.5; }
+  .alt-row .linkbtn{
+    margin-top:6px; font-size:.8rem; border:none; background:none; color:var(--brass); cursor:pointer;
+    font-weight:600; padding:0; text-decoration:underline;
+  }
+
+  .trap-card{ border:1.5px solid var(--garnet); background:var(--garnet-tint); border-radius:10px; padding:14px 16px; margin-bottom:14px; }
+  .trap-card h3{ color:var(--garnet); display:flex; align-items:center; gap:6px; }
+  .trap-card p{ color:var(--ink); }
+  .trap-card .result{ font-weight:600; font-size:.88rem; color:var(--garnet); margin-bottom:10px; }
+  .trap-card .trapbtns{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .trapview-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--walnut);
+    color:var(--brass-tint); padding:9px 14px; border-radius:8px; margin-bottom:12px; font-size:.86rem; font-weight:600;
+  }
+  .trapview-bar .steps{ display:flex; gap:6px; }
+  .trapview-bar button{ appearance:none; border:1px solid var(--brass-tint); background:transparent; color:var(--brass-tint); padding:5px 10px; border-radius:6px; cursor:pointer; font-weight:600; }
+
+  .install-bar{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    margin:0 0 16px; padding:11px 14px; border-radius:10px;
+    border:1.5px solid var(--brass); background:var(--brass-tint); color:var(--ink);
+  }
+  .install-bar .ib-icon{ font-size:1.35rem; line-height:1; color:var(--brass-strong); }
+  .install-bar .ib-text{ flex:1 1 210px; min-width:0; font-size:.87rem; line-height:1.45; }
+  .install-bar .ib-text b{ display:block; color:var(--brass-strong); font-size:.92rem; }
+  .install-bar .ib-text span{ color:var(--ink-soft); }
+  .install-bar .ib-x{
+    appearance:none; border:none; background:none; color:var(--ink-faint); cursor:pointer;
+    font-size:1.3rem; line-height:1; padding:2px 4px; flex:none;
+  }
+  .install-bar .ib-x:hover{ color:var(--ink); }
+  footer.foot{ text-align:center; color:var(--ink-faint); font-size:.8rem; padding:26px 10px 0; line-height:1.6; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="pc-p" viewBox="0 0 45 45">
+ <circle cx="22.5" cy="14" r="6"/>
+ <path d="M15 35c0-8.5 3.8-13.5 7.5-13.5S30 26.5 30 35z"/>
+ <rect x="12" y="35" width="21" height="4" rx="1.5"/>
+</symbol>
+<symbol id="pc-r" viewBox="0 0 45 45">
+ <rect x="13" y="10" width="4" height="6"/>
+ <rect x="20.5" y="10" width="4" height="6"/>
+ <rect x="28" y="10" width="4" height="6"/>
+ <path d="M12 16h21l-2 18h-17z"/>
+ <rect x="11" y="34" width="23" height="4" rx="1.5"/>
+</symbol>
+<symbol id="pc-b" viewBox="0 0 45 45">
+ <circle cx="22.5" cy="9" r="3.2"/>
+ <path d="M22.5 13.5c6.5 3 8.7 9.7 6.3 16.2-1 2.7-2.6 4.3-2.6 4.3h-7.4s-1.6-1.6-2.6-4.3c-2.4-6.5-.2-13.2 6.3-16.2z"/>
+ <path d="M17.3 21.5h10.4" stroke-width="2"/>
+ <path d="M16.5 34.5c1.4-2.3 3.6-3.3 6-3.3s4.6 1 6 3.3z"/>
+ <rect x="12" y="34.5" width="21" height="4" rx="1.5"/>
+</symbol>
+<symbol id="pc-n" viewBox="0 0 45 45">
+ <polygon points="13,33 13,24 16,17 14,13 16,8 22,7 20,11 26,9 24,13 35,18 30,22 33,26 29,25 26,29 17,29 16,33"/>
+ <circle cx="29.5" cy="16" r="1.1"/>
+ <rect x="11" y="33" width="23" height="4.5" rx="1.5"/>
+</symbol>
+<symbol id="pc-q" viewBox="0 0 45 45">
+ <circle cx="10" cy="12" r="2.4"/><circle cx="18" cy="8" r="2.4"/><circle cx="22.5" cy="6.5" r="2.4"/><circle cx="27" cy="8" r="2.4"/><circle cx="35" cy="12" r="2.4"/>
+ <path d="M10 14 L35 14 L32 30 L13 30 Z"/>
+ <path d="M12.5 30 c2-2 5-3 10-3s8 1 10 3z"/>
+ <rect x="11" y="34" width="23" height="4.5" rx="1.5"/>
+</symbol>
+<symbol id="pc-k" viewBox="0 0 45 45">
+ <rect x="21" y="3" width="3" height="7"/>
+ <rect x="18.5" y="5.5" width="8" height="3"/>
+ <path d="M14 14 L31 14 L28.5 30 L16.5 30 Z"/>
+ <path d="M13 30c2.5-2.3 5.8-3.3 9.5-3.3s7 1 9.5 3.3z"/>
+ <rect x="11" y="34" width="23" height="4.5" rx="1.5"/>
+</symbol>
+</defs>
+</svg>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="eyebrow mono">1.d4 d5 2.c4 — an opening study</span>
+      <h1>Three Answers to <span class="accent">c4</span></h1>
+    </div>
+    <nav class="opening-tabs" id="openingTabs"></nav>
+  </header>
+
+  <div class="install-bar" id="installBar" hidden>
+    <span class="ib-icon" aria-hidden="true">&#9819;</span>
+    <div class="ib-text">
+      <b id="installTitle">Add to your home screen</b>
+      <span id="installHint">Opens full-screen with its own icon, like an app.</span>
+    </div>
+    <button class="btn" id="btnInstall" hidden>Install</button>
+    <button class="ib-x" id="btnInstallDismiss" aria-label="Dismiss">&times;</button>
+  </div>
+
+  <main class="layout">
+    <section class="board-column">
+      <div class="card blurb" id="blurb"></div>
+
+      <div class="status-line">
+        <span id="statusText">—</span>
+        <span class="badge start" id="statusBadge">START</span>
+      </div>
+
+      <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="Chess board"></div></div>
+
+      <div class="card history-ribbon" id="historyRibbon"></div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnReset">⟲ Reset</button>
+        <button class="btn ghost" id="btnBack">‹ Back one move</button>
+        <button class="btn ghost" id="btnFlip">⇅ Flip board</button>
+      </div>
+
+      <button class="btn book" id="btnBookMove" hidden></button>
+
+      <div class="banner" id="banner" hidden></div>
+
+      <p class="hint">Tap a piece, then tap a highlighted square to move it — both sides are yours to play, so you can walk through the whole line at your own pace.</p>
+    </section>
+
+    <section class="tutor-column card">
+      <div class="ttabs">
+        <button class="ttab active" data-panel="explain">Explain</button>
+        <button class="ttab" data-panel="alts">Alternatives</button>
+        <button class="ttab" data-panel="traps">Traps &amp; pitfalls</button>
+      </div>
+      <div class="tpanels">
+        <div class="tpanel active" id="panel-explain"></div>
+        <div class="tpanel" id="panel-alts"></div>
+        <div class="tpanel" id="panel-traps"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    Covers the classical main lines of the Queen's Gambit Declined, Slav Defense and Queen's Gambit Accepted.<br>
+    Off-book moves are checked by a real search engine built into this page (alpha-beta pruning, capture quiescence, a few plies of look-ahead) — not a full-strength engine, and not a substitute for one, but genuine multi-ply analysis rather than a one-move scan. The scripted content (main lines, alternatives, traps) is still a White repertoire, but off-book analysis is symmetric: whichever side plays an unscripted move gets the same graded verdict and the same plain-language read of what the move is going for, and the Alternatives and Traps tabs stay useful off-book too — showing the engine's own top picks, and flagging it if an off-book path happens to transpose into a known trap position.
+  </footer>
+</div>
+
+<script>
+/* =========================================================================
+   CHESS ENGINE — minimal legal-move generator (auto-queen promotion)
+   ========================================================================= */
+const ChessEngine = (function(){
+  'use strict';
+  const WHITE='w', BLACK='b';
+  const START = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  function sq(file,rank){ return rank*8+file; }
+  function fileOf(i){ return i%8; }
+  function rankOf(i){ return Math.floor(i/8); }
+  function algebraic(i){ return 'abcdefgh'[fileOf(i)] + (rankOf(i)+1); }
+  function fromAlgebraic(s){ return sq(s.charCodeAt(0)-97, s.charCodeAt(1)-49); }
+  function color(p){ if(!p) return null; return p===p.toUpperCase() ? WHITE : BLACK; }
+  function type(p){ return p ? p.toUpperCase() : null; }
+
+  const KNIGHT_OFFS = [[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]];
+  const KING_OFFS = [[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];
+  const BISHOP_DIRS = [[1,1],[1,-1],[-1,1],[-1,-1]];
+  const ROOK_DIRS = [[1,0],[-1,0],[0,1],[0,-1]];
+
+  function Position(fen){
+    this.board = new Array(64).fill(null);
+    this.turn = WHITE;
+    this.castling = {K:false,Q:false,k:false,q:false};
+    this.ep = null;
+    this.history = [];
+    if(fen) this.loadFen(fen);
+  }
+  Position.prototype.loadFen = function(fen){
+    const parts = fen.split(' ');
+    const rows = parts[0].split('/');
+    this.board = new Array(64).fill(null);
+    for(let r=0;r<8;r++){
+      const rank = 7-r; let file=0;
+      for(const ch of rows[r]){
+        if(/\d/.test(ch)){ file += parseInt(ch,10); }
+        else { this.board[sq(file,rank)] = ch; file++; }
+      }
+    }
+    this.turn = parts[1]==='b' ? BLACK : WHITE;
+    const cr = parts[2]||'-';
+    this.castling = {K:cr.includes('K'),Q:cr.includes('Q'),k:cr.includes('k'),q:cr.includes('q')};
+    this.ep = (parts[3] && parts[3]!=='-') ? fromAlgebraic(parts[3]) : null;
+    this.history = [];
+  };
+  Position.prototype.toFen = function(){
+    let rows=[];
+    for(let r=7;r>=0;r--){
+      let row=''; let empty=0;
+      for(let f=0;f<8;f++){
+        const p = this.board[sq(f,r)];
+        if(!p){ empty++; } else { if(empty){ row+=empty; empty=0; } row+=p; }
+      }
+      if(empty) row+=empty;
+      rows.push(row);
+    }
+    let cr = (this.castling.K?'K':'')+(this.castling.Q?'Q':'')+(this.castling.k?'k':'')+(this.castling.q?'q':'');
+    if(!cr) cr='-';
+    const epStr = this.ep!=null ? algebraic(this.ep) : '-';
+    return rows.join('/')+' '+this.turn+' '+cr+' '+epStr+' 0 1';
+  };
+  function isSlider(t){ return t==='B'||t==='R'||t==='Q'; }
+
+  Position.prototype.attacksSquare = function(target, bySide){
+    const tf=fileOf(target), tr=rankOf(target);
+    const dir = bySide===WHITE ? -1 : 1;
+    for(const df of [-1,1]){
+      const f=tf+df, r=tr+dir;
+      if(f>=0&&f<8&&r>=0&&r<8){ const p=this.board[sq(f,r)]; if(p && color(p)===bySide && type(p)==='P') return true; }
+    }
+    for(const [df,dr] of KNIGHT_OFFS){
+      const f=tf+df, r=tr+dr;
+      if(f>=0&&f<8&&r>=0&&r<8){ const p=this.board[sq(f,r)]; if(p && color(p)===bySide && type(p)==='N') return true; }
+    }
+    for(const [df,dr] of KING_OFFS){
+      const f=tf+df, r=tr+dr;
+      if(f>=0&&f<8&&r>=0&&r<8){ const p=this.board[sq(f,r)]; if(p && color(p)===bySide && type(p)==='K') return true; }
+    }
+    for(const [df,dr] of BISHOP_DIRS){
+      let f=tf+df,r=tr+dr;
+      while(f>=0&&f<8&&r>=0&&r<8){ const p=this.board[sq(f,r)]; if(p){ if(color(p)===bySide && (type(p)==='B'||type(p)==='Q')) return true; break; } f+=df; r+=dr; }
+    }
+    for(const [df,dr] of ROOK_DIRS){
+      let f=tf+df,r=tr+dr;
+      while(f>=0&&f<8&&r>=0&&r<8){ const p=this.board[sq(f,r)]; if(p){ if(color(p)===bySide && (type(p)==='R'||type(p)==='Q')) return true; break; } f+=df; r+=dr; }
+    }
+    return false;
+  };
+  Position.prototype.kingSquare = function(side){ return this.board.indexOf(side===WHITE?'K':'k'); };
+  Position.prototype.inCheck = function(side){ const ks=this.kingSquare(side); if(ks<0) return false; return this.attacksSquare(ks, side===WHITE?BLACK:WHITE); };
+
+  Position.prototype.pseudoMoves = function(){
+    const moves=[]; const side=this.turn;
+    for(let i=0;i<64;i++){
+      const p=this.board[i]; if(!p||color(p)!==side) continue;
+      const t=type(p); const f=fileOf(i), r=rankOf(i);
+      if(t==='P'){
+        const dir = side===WHITE?1:-1; const startRank = side===WHITE?1:6; const lastRank = side===WHITE?7:0;
+        const one = sq(f, r+dir);
+        if(r+dir>=0 && r+dir<8 && !this.board[one]){
+          moves.push({from:i,to:one,piece:t,promotion:(rankOf(one)===lastRank)?'Q':null});
+          const two = sq(f, r+2*dir);
+          if(r===startRank && !this.board[two]) moves.push({from:i,to:two,piece:t,double:true});
+        }
+        for(const df of [-1,1]){
+          const cf=f+df, cr=r+dir; if(cf<0||cf>7||cr<0||cr>7) continue;
+          const to=sq(cf,cr); const target=this.board[to];
+          if(target && color(target)!==side) moves.push({from:i,to,piece:t,capture:true,promotion:(rankOf(to)===lastRank)?'Q':null});
+          else if(this.ep!=null && to===this.ep) moves.push({from:i,to,piece:t,capture:true,ep:true});
+        }
+      } else if(t==='N'){
+        for(const [df,dr] of KNIGHT_OFFS){
+          const nf=f+df,nr=r+dr; if(nf<0||nf>7||nr<0||nr>7) continue;
+          const to=sq(nf,nr); const target=this.board[to];
+          if(!target || color(target)!==side) moves.push({from:i,to,piece:t,capture:!!target});
+        }
+      } else if(t==='K'){
+        for(const [df,dr] of KING_OFFS){
+          const nf=f+df,nr=r+dr; if(nf<0||nf>7||nr<0||nr>7) continue;
+          const to=sq(nf,nr); const target=this.board[to];
+          if(!target || color(target)!==side) moves.push({from:i,to,piece:t,capture:!!target});
+        }
+        const rank0 = side===WHITE?0:7;
+        if(i===sq(4,rank0) && !this.inCheck(side)){
+          const kFlag = side===WHITE?'K':'k'; const qFlag = side===WHITE?'Q':'q';
+          if(this.castling[kFlag] && !this.board[sq(5,rank0)] && !this.board[sq(6,rank0)]
+             && !this.attacksSquare(sq(5,rank0), side===WHITE?BLACK:WHITE)
+             && !this.attacksSquare(sq(6,rank0), side===WHITE?BLACK:WHITE)
+             && this.board[sq(7,rank0)]===(side===WHITE?'R':'r')) moves.push({from:i,to:sq(6,rank0),piece:t,castle:'K'});
+          if(this.castling[qFlag] && !this.board[sq(3,rank0)] && !this.board[sq(2,rank0)] && !this.board[sq(1,rank0)]
+             && !this.attacksSquare(sq(3,rank0), side===WHITE?BLACK:WHITE)
+             && !this.attacksSquare(sq(2,rank0), side===WHITE?BLACK:WHITE)
+             && this.board[sq(0,rank0)]===(side===WHITE?'R':'r')) moves.push({from:i,to:sq(2,rank0),piece:t,castle:'Q'});
+        }
+      } else if(isSlider(t)){
+        const dirs = t==='B'?BISHOP_DIRS : t==='R'?ROOK_DIRS : BISHOP_DIRS.concat(ROOK_DIRS);
+        for(const [df,dr] of dirs){
+          let nf=f+df,nr=r+dr;
+          while(nf>=0&&nf<8&&nr>=0&&nr<8){
+            const to=sq(nf,nr); const target=this.board[to];
+            if(!target){ moves.push({from:i,to,piece:t}); } else { if(color(target)!==side) moves.push({from:i,to,piece:t,capture:true}); break; }
+            nf+=df; nr+=dr;
+          }
+        }
+      }
+    }
+    return moves;
+  };
+  Position.prototype.makeMove = function(m){
+    const state = {board:this.board.slice(), castling:Object.assign({},this.castling), ep:this.ep, turn:this.turn};
+    this.history.push(state);
+    const side=this.turn; const piece=this.board[m.from];
+    this.board[m.from]=null;
+    if(m.ep){ const capSq = sq(fileOf(m.to), rankOf(m.from)); this.board[capSq]=null; }
+    this.board[m.to] = m.promotion ? (side===WHITE?'Q':'q') : piece;
+    if(m.castle){
+      const rank0 = side===WHITE?0:7;
+      if(m.castle==='K'){ this.board[sq(5,rank0)] = this.board[sq(7,rank0)]; this.board[sq(7,rank0)]=null; }
+      else { this.board[sq(3,rank0)] = this.board[sq(0,rank0)]; this.board[sq(0,rank0)]=null; }
+    }
+    const t=type(piece);
+    if(t==='K'){ if(side===WHITE){this.castling.K=false;this.castling.Q=false;} else {this.castling.k=false;this.castling.q=false;} }
+    if(m.from===sq(0,0)||m.to===sq(0,0)) this.castling.Q=false;
+    if(m.from===sq(7,0)||m.to===sq(7,0)) this.castling.K=false;
+    if(m.from===sq(0,7)||m.to===sq(0,7)) this.castling.q=false;
+    if(m.from===sq(7,7)||m.to===sq(7,7)) this.castling.k=false;
+    this.ep = m.double ? sq(fileOf(m.from), (rankOf(m.from)+rankOf(m.to))/2) : null;
+    this.turn = side===WHITE?BLACK:WHITE;
+  };
+  Position.prototype.unmakeMove = function(){
+    const state = this.history.pop();
+    this.board = state.board; this.castling = state.castling; this.ep = state.ep; this.turn = state.turn;
+  };
+  Position.prototype.legalMoves = function(){
+    const side=this.turn; const pseudo=this.pseudoMoves(); const legal=[];
+    for(const m of pseudo){ this.makeMove(m); const ok = !this.inCheck(side); this.unmakeMove(); if(ok) legal.push(m); }
+    return legal;
+  };
+  Position.prototype.legalMovesFrom = function(fromSq){ return this.legalMoves().filter(m=>m.from===fromSq); };
+  function pieceLetter(t){ return t; }
+  Position.prototype.san = function(m, legalMovesAtPly){
+    if(m.castle==='K') return this.finishSan('O-O', m);
+    if(m.castle==='Q') return this.finishSan('O-O-O', m);
+    const t=m.piece; const destStr = algebraic(m.to); const capture = m.capture ? 'x' : '';
+    if(t==='P'){
+      let s = capture ? ('abcdefgh'[fileOf(m.from)] + 'x' + destStr) : destStr;
+      if(m.promotion) s += '=' + m.promotion;
+      return this.finishSan(s, m);
+    }
+    const others = (legalMovesAtPly||this.legalMoves()).filter(o=>o.piece===t && o.to===m.to && o.from!==m.from && !o.castle);
+    let disamb='';
+    if(others.length){
+      const sameFile = others.some(o=>fileOf(o.from)===fileOf(m.from));
+      const sameRank = others.some(o=>rankOf(o.from)===rankOf(m.from));
+      if(!sameFile) disamb = 'abcdefgh'[fileOf(m.from)];
+      else if(!sameRank) disamb = String(rankOf(m.from)+1);
+      else disamb = algebraic(m.from);
+    }
+    return this.finishSan(pieceLetter(t)+disamb+capture+destStr, m);
+  };
+  Position.prototype.finishSan = function(base, m){
+    this.makeMove(m);
+    const opp = this.turn; const inChk = this.inCheck(opp);
+    let suffix='';
+    if(inChk){ const noMoves = this.legalMoves().length===0; suffix = noMoves ? '#' : '+'; }
+    this.unmakeMove();
+    return base+suffix;
+  };
+  Position.prototype.moveFromSquares = function(from,to){ return this.legalMovesFrom(from).find(m=>m.to===to) || null; };
+
+  /* =========================================================================
+     SEARCH ENGINE — negamax with alpha-beta pruning, capture quiescence,
+     iterative deepening under a wall-clock time budget, and standard
+     midgame piece-square tables. This is a genuine (if shallow, time-boxed)
+     search-and-evaluate engine, not a heuristic hang-checker: it looks
+     several plies ahead and returns real centipawn evaluations and
+     best-move suggestions. It will not spot every deep multi-move trick —
+     see the disclaimers in the UI — but it catches far more than a single-
+     ply material scan.
+     ========================================================================= */
+  const MG_VALUE = { P:100, N:320, B:330, R:500, Q:900, K:0 };
+  const PST = {
+    P:[0,0,0,0,0,0,0,0, 5,10,10,-20,-20,10,10,5, 5,-5,-10,0,0,-10,-5,5, 0,0,0,20,20,0,0,0, 5,5,10,25,25,10,5,5, 10,10,20,30,30,20,10,10, 50,50,50,50,50,50,50,50, 0,0,0,0,0,0,0,0],
+    N:[-50,-40,-30,-30,-30,-30,-40,-50, -40,-20,0,5,5,0,-20,-40, -30,5,10,15,15,10,5,-30, -30,0,15,20,20,15,0,-30, -30,5,15,20,20,15,5,-30, -30,0,10,15,15,10,0,-30, -40,-20,0,0,0,0,-20,-40, -50,-40,-30,-30,-30,-30,-40,-50],
+    B:[-20,-10,-10,-10,-10,-10,-10,-20, -10,5,0,0,0,0,5,-10, -10,10,10,10,10,10,10,-10, -10,0,10,10,10,10,0,-10, -10,5,5,10,10,5,5,-10, -10,0,5,10,10,5,0,-10, -10,0,0,0,0,0,0,-10, -20,-10,-10,-10,-10,-10,-10,-20],
+    R:[0,0,0,5,5,0,0,0, -5,0,0,0,0,0,0,-5, -5,0,0,0,0,0,0,-5, -5,0,0,0,0,0,0,-5, -5,0,0,0,0,0,0,-5, -5,0,0,0,0,0,0,-5, 5,10,10,10,10,10,10,5, 0,0,0,0,0,0,0,0],
+    Q:[-20,-10,-10,-5,-5,-10,-10,-20, -10,0,5,0,0,0,0,-10, -10,5,5,5,5,5,0,-10, 0,0,5,5,5,5,0,-5, -5,0,5,5,5,5,0,-5, -10,0,5,5,5,5,0,-10, -10,0,0,0,0,0,0,-10, -20,-10,-10,-5,-5,-10,-10,-20],
+    K:[20,30,10,0,0,10,30,20, 20,20,0,0,0,0,20,20, -10,-20,-20,-20,-20,-20,-20,-10, -20,-30,-30,-40,-40,-30,-30,-20, -30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30]
+  };
+  function pstValue(t, idx, side){ const r=rankOf(idx), f=fileOf(idx); const li = side===WHITE?(r*8+f):((7-r)*8+f); return PST[t][li]; }
+  function evaluate(pos){
+    let score=0, wb=0, bb=0;
+    for(let i=0;i<64;i++){ const p=pos.board[i]; if(!p) continue; const t=type(p), c=color(p);
+      const val = MG_VALUE[t] + pstValue(t,i,c); score += (c===WHITE?val:-val); if(t==='B'){ if(c===WHITE) wb++; else bb++; } }
+    if(wb>=2) score+=30; if(bb>=2) score-=30;
+    return score; // centipawns, positive = good for White
+  }
+  const MVV_LVA = {P:1,N:2,B:3,R:4,Q:5,K:6};
+  function orderMoves(pos, moves, pvMove){
+    return moves.slice().sort((a,b)=>{
+      if(pvMove){
+        const aPv = (a.from===pvMove.from && a.to===pvMove.to) ? 1000 : 0;
+        const bPv = (b.from===pvMove.from && b.to===pvMove.to) ? 1000 : 0;
+        if(aPv!==bPv) return bPv-aPv;
+      }
+      const aCap = a.capture ? (MVV_LVA[type(pos.board[a.to])||'P']*10 - MVV_LVA[a.piece]) : -1;
+      const bCap = b.capture ? (MVV_LVA[type(pos.board[b.to])||'P']*10 - MVV_LVA[b.piece]) : -1;
+      return bCap-aCap;
+    });
+  }
+  const TimeUp = {sentinel:true};
+  let searchNodes=0, searchDeadline=Infinity;
+  function checkTime(){ if(Date.now()>searchDeadline) throw TimeUp; }
+  function quiesce(pos, alpha, beta, side){
+    searchNodes++;
+    if((searchNodes & 511)===0) checkTime();
+    const standPat = side===WHITE ? evaluate(pos) : -evaluate(pos);
+    if(standPat>=beta) return beta;
+    if(alpha<standPat) alpha=standPat;
+    const moves = pos.legalMoves().filter(m=>m.capture);
+    const ordered = orderMoves(pos, moves);
+    for(const m of ordered){
+      pos.makeMove(m);
+      const score = -quiesce(pos, -beta, -alpha, side===WHITE?BLACK:WHITE);
+      pos.unmakeMove();
+      if(score>=beta) return beta;
+      if(score>alpha) alpha=score;
+    }
+    return alpha;
+  }
+  function negamax(pos, depth, alpha, beta, side){
+    searchNodes++;
+    if((searchNodes & 511)===0) checkTime();
+    const legal = pos.legalMoves();
+    if(legal.length===0){
+      if(pos.inCheck(side)) return -100000 + (64-depth);
+      return 0;
+    }
+    if(depth===0) return quiesce(pos, alpha, beta, side);
+    const ordered = orderMoves(pos, legal);
+    let best=-Infinity;
+    for(const m of ordered){
+      pos.makeMove(m);
+      const score = -negamax(pos, depth-1, -beta, -alpha, side===WHITE?BLACK:WHITE);
+      pos.unmakeMove();
+      if(score>best) best=score;
+      if(best>alpha) alpha=best;
+      if(alpha>=beta) break;
+    }
+    return best;
+  }
+  /* Fast root search: proper alpha-beta pruning across sibling root moves.
+     EXACT for the returned best move; every OTHER move's score in
+     `.moves` is a pruning bound, not a true value — safe to use for move
+     ordering/candidate SANs, but never for grading a specific move's
+     quality (use evaluateMoveExact for that). Always operates on a private
+     clone of the input position, so an aborted (time-boxed) search can
+     never corrupt the caller's live game state. */
+  function fastRootSearch(inputPos, opts){
+    opts = opts||{};
+    const maxDepth = opts.maxDepth||5, timeBudgetMs = opts.timeBudgetMs||450;
+    const pos = new Position(inputPos.toFen());
+    const side = pos.turn;
+    const legal = pos.legalMoves();
+    if(legal.length===0) return {best:null, moves:[], nodes:0, depthReached:0};
+    searchDeadline = Date.now()+timeBudgetMs;
+    searchNodes = 0;
+    let lastGood=null, pvMove=null;
+    for(let depth=1; depth<=maxDepth; depth++){
+      const ordered = orderMoves(pos, legal, pvMove);
+      const results = [];
+      let alpha=-Infinity, beta=Infinity, aborted=false;
+      try{
+        for(const m of ordered){
+          const sanActual = pos.san(m, legal);
+          pos.makeMove(m);
+          const score = -negamax(pos, depth-1, -beta, -alpha, side===WHITE?BLACK:WHITE);
+          pos.unmakeMove();
+          results.push({move:m, san:sanActual, score});
+          if(score>alpha) alpha=score;
+        }
+      } catch(e){ if(e===TimeUp) aborted=true; else throw e; }
+      if(aborted) break;
+      results.sort((a,b)=>b.score-a.score);
+      lastGood = {best:results[0], moves:results, nodes:searchNodes, depthReached:depth};
+      pvMove = results[0].move;
+      if(Date.now()>=searchDeadline) break;
+    }
+    if(!lastGood){
+      const ordered = orderMoves(pos, legal);
+      const m0 = ordered[0];
+      pos.makeMove(m0);
+      const score = side===WHITE?evaluate(pos):-evaluate(pos);
+      pos.unmakeMove();
+      return {best:{move:m0, san:pos.san(m0,legal), score}, moves:[], nodes:searchNodes, depthReached:0};
+    }
+    return lastGood;
+  }
+  /* Exact score for one specific legal move at `pos`, to the given depth,
+     via a full (-Infinity,Infinity) window — used to fairly grade a move
+     that fastRootSearch's own pruning only left with an inexact bound. */
+  function evaluateMoveExact(inputPos, move, depth, timeBudgetMs){
+    const pos = new Position(inputPos.toFen());
+    const legal = pos.legalMoves();
+    const m = legal.find(mm=>mm.from===move.from && mm.to===move.to && (mm.promotion||null)===(move.promotion||null));
+    if(!m) return null;
+    const side = pos.turn;
+    const sanActual = pos.san(m, legal);
+    searchDeadline = Date.now()+(timeBudgetMs||400);
+    searchNodes = 0;
+    try{
+      pos.makeMove(m);
+      const score = -negamax(pos, Math.max(0,depth-1), -Infinity, Infinity, side===WHITE?BLACK:WHITE);
+      pos.unmakeMove();
+      return {san:sanActual, score, nodes:searchNodes, timedOut:false};
+    } catch(e){
+      if(e===TimeUp) return {san:sanActual, score:null, nodes:searchNodes, timedOut:true};
+      throw e;
+    }
+  }
+
+  return { Position, START, sq, fileOf, rankOf, algebraic, fromAlgebraic, color, type, WHITE, BLACK,
+           evaluate, fastRootSearch, evaluateMoveExact };
+})();
+</script>
+
+<script>
+/* =========================================================================
+   OPENING DATA — Queen's Gambit Declined / Slav Defense / Queen's Gambit Accepted
+   Every move list below has been machine-verified for legality and SAN
+   accuracy against the engine above before being written here.
+   ========================================================================= */
+const OPENINGS = {
+
+  qgd: {
+    id:'qgd', name:'Declined', shortName:'QGD', fullName:"Queen's Gambit Declined",
+    tagline:"Black meets 2.c4 with ...e6 — the classical answer. The centre stays intact and solid; Black's whole strategic task is finding the right moment to free the position, usually with the manoeuvre ...dxc4 and ...Nd5, and to solve the problem of the light-squared bishop shut in behind the e6-pawn.",
+    mainLine:[
+      {san:'d4', explain:"Stakes a claim in the centre and opens the diagonal for the c1-bishop. It also prepares c4, attacking d5 a second time next move.",
+        alts:[{san:'Nf3', note:"Keeps the move order flexible; usually just transposes back into the same Queen's-Gambit structures once c4 and d4 both appear."}]},
+      {san:'d5', explain:"The most classical reply: Black meets strength with strength in the centre rather than conceding it.",
+        alts:[{san:'Nf6', note:"A flexible Indian move order — can still transpose back to these lines, or head into King's Indian / Nimzo territory instead."}]},
+      {san:'c4', explain:"The Queen's Gambit proper. White offers the c-pawn: if ...dxc4, it's never really lost for good — e3/Bxc4 or Qa4+ tricks win it straight back — but the resulting open lines and extra space favour White. The real point isn't the pawn; it's tempting Black's d5-pawn to feel lonely."},
+      {san:'e6', explain:"The Queen's Gambit Declined. Black keeps the centre intact and prepares ...Be7 or ...Bb4, at the cost of shutting the c8-bishop in for a while. Solving that bishop's problem is Black's main strategic task for the rest of the opening.",
+        alts:[
+          {san:'c6', note:"The Slav Defense — supports d5 with a pawn instead of a piece, keeping c8 free so the bishop can get out to f5 or g4 before e6 blocks it in.", linksTo:'slav'},
+          {san:'dxc4', note:"The Queen's Gambit Accepted — grabs the pawn at once and meets White's space with active piece play.", linksTo:'qga'},
+          {san:'Nc6', note:"The Chigorin Defense — active and provocative, but blocks the c-pawn and gives up the fight for d5."},
+          {san:'e5', note:"The Albin Countergambit — a sharp piece sacrifice for fast development. Objectively fine for White with accurate play, but full of traps if White isn't ready for it."}
+        ]},
+      {san:'Nc3', explain:"Develops naturally and adds a third attacker on d5, preparing Bg5 to pin whichever knight lands on f6.",
+        alts:[{san:'Nf3', note:"A flexible move order that avoids the Ragozin (...Bb4) ideas and delays committing the queenside knight."},{san:'cxd5', note:"Heads straight into the Exchange Variation — trading immediately and playing for a minority attack (b4-b5) against Black's queenside pawns."}]},
+      {san:'Nf6', explain:"Develops the kingside knight, defends d5 a second time, and prepares to castle."},
+      {san:'Bg5', explain:"The classical try: pins the f6-knight to the queen, discourages a quick trade of it, and keeps the option of doubling Black's pawns with Bxf6 later.",
+        alts:[{san:'Nf3', note:"The flexible 'Rubinstein' set-up — complete development first and decide between Bg5, Bf4 and e3 afterwards."},{san:'cxd5', note:"A delayed Exchange Variation, aiming for the same minority-attack plan."}]},
+      {san:'Be7', explain:"The safe, solid reply: breaks the pin without creating any weaknesses and prepares to castle next move.",
+        alts:[
+          {san:'Nbd7', note:"A natural-looking developing move — but if White later grabs on d5 carelessly, this is exactly the position behind the famous 'Elephant Trap'. Check the Traps tab!"},
+          {san:'Bb4', note:"The Ragozin Defense — pins the c3-knight instead, aiming for sharper piece play than the calm Orthodox lines."},
+          {san:'h6', note:"Challenges the bishop immediately, forcing an early decision between Bh4, Bxf6 and Bf4."}
+        ]},
+      {san:'e3', explain:"A modest but important move: supports d4, opens the f1-bishop's diagonal, and keeps the option of meeting ...h6 with Bh4 rather than committing the bishop yet."},
+      {san:'O-O', explain:"King safety first, before committing to any central plan."},
+      {san:'Nf3', explain:"Completes minor-piece development, adds a second defender to d4, and prepares Rc1."},
+      {san:'Nbd7', explain:"Prepares ...c6 to support d5 and clears d7 for the freeing manoeuvre ...dxc4 and ...Nd5 — sometimes called Capablanca's Freeing Manoeuvre."},
+      {san:'Rc1', explain:"A quiet, thematic move: the rook takes the file that becomes half-open the instant Black plays ...dxc4, so White is ready to meet it."},
+      {san:'c6', explain:"Reinforces d5 once more and prepares the freeing ...dxc4 without allowing any tricks against the pawn in the meantime."},
+      {san:'Bd3', explain:"Retreats to an active diagonal aimed at h7, prepares e3-e4 later, and keeps f1 clear.",
+        alts:[{san:'a3', note:"A useful prophylactic move seen in many grandmaster games, ruling out ...Nb4 or ...Bb4 ideas for good."}]},
+      {san:'dxc4', explain:"The key freeing capture, timed for this exact moment: it gains a tempo on the bishop that just arrived on d3 and prepares ...Nd5 next."},
+      {san:'Bxc4', explain:"Forced — the point of Black's timing. The bishop has to move again."},
+      {san:'Nd5', explain:"Capablanca's Freeing Manoeuvre. Black offers a trade of knights to loosen White's grip, ends the long pin on the f6-knight for good, and prepares the central break ...e5.",
+        alts:[{san:'b5', note:"More ambitious, but it weakens the queenside light squares and needs very careful handling."}]},
+      {san:'Bxe7', explain:"White trades the dark-squared bishop rather than retreat it and lose more time; Bxd5 first leads to similar structures."},
+      {san:'Qxe7', explain:"Recaptures naturally — the queen is well placed, eyeing the long e-file."},
+      {san:'O-O', explain:"Completes development and tucks the king away before the position opens further."},
+      {san:'Nxc3', explain:"Trades off the last piece of tension around d5/c3, simplifying toward the freeing break."},
+      {san:'Rxc3', explain:"Recaptures, keeping the rook active on the open c-file."},
+      {san:'e5', explain:"The point of the whole manoeuvre! Black strikes in the centre at last, equalising space and activity — the textbook demonstration that the Orthodox QGD is fully sound for Black."}
+    ],
+    traps:[
+      {
+        name:"The Elephant Trap", result:"Black wins a piece for a pawn.",
+        moves:['d4','d5','c4','e6','Nc3','Nf6','Bg5','Nbd7','cxd5','exd5','Nxd5','Nxd5','Bxd8','Bb4+','Qd2','Bxd2+','Kxd2','Kxd8'],
+        losingIndex:10,
+        explain:"It looks like White simply wins the d5-pawn back with a spare tempo — the f6-knight seems pinned to the queen by the bishop on g5, so surely Black can't recapture safely? In fact, after 6...Nxd5! Black doesn't mind the coming queen trade at all. 7.Bxd8 Bb4+! is the point: a zwischenzug check that White must answer with the queen, and after 8.Qd2 Bxd2+ 9.Kxd2 Kxd8, the smoke clears with Black a full piece ahead for a single pawn — and White's king has lost its right to castle too. The lesson: before cashing in any combination, always look for an in-between check first."
+      }
+    ]
+  },
+
+  slav: {
+    id:'slav', name:'Slav', shortName:'Slav', fullName:'Slav Defense',
+    tagline:"Black meets 2.c4 with ...c6, supporting d5 with a pawn rather than a piece. That keeps the c8-bishop free to reach an active diagonal (f5 or g4) before ...e6 would ever shut it in — the whole system's reason for existing.",
+    mainLine:[
+      {san:'d4', explain:"Claims the centre and opens lines for the c1-bishop."},
+      {san:'d5', explain:"Meets the centre pawn head-on, the classical reply."},
+      {san:'c4', explain:"The Queen's Gambit. Offers the c-pawn to gain time and space; White regains it within a few moves in almost all lines."},
+      {san:'c6', explain:"The Slav Defense. Unlike the Declined, Black supports d5 with a pawn instead of a piece, keeping e6 free for later — and crucially, keeping c8 free so the bishop can develop outside the pawn chain.",
+        alts:[{san:'e6', note:"The Queen's Gambit Declined instead.", linksTo:'qgd'},{san:'dxc4', note:"The Queen's Gambit Accepted instead.", linksTo:'qga'}]},
+      {san:'Nf3', explain:"Natural development, preparing Nc3 and e3, while keeping an early cxd5 exchange in reserve.",
+        alts:[{san:'Nc3', note:"Also very common — usually just a different move order into the same main lines."},{san:'cxd5', note:"The Exchange Slav — trades immediately for a symmetrical structure. Quiet and drawish on the surface, but Black's pieces are slightly more awkward to place, so it still holds practical chances."}]},
+      {san:'Nf6', explain:"Completes kingside development and adds pressure on the centre."},
+      {san:'Nc3', explain:"Adds a third attacker on d5 and prepares the testing try a4 next.",
+        alts:[{san:'e3', note:"The 'Slow Slav' — solid but a little passive, trading away the fight for an opening edge in return for a simple game."}]},
+      {san:'dxc4', explain:"Black takes the pawn now, while it can still be met actively. The point is to get the light-squared bishop out to f5 (or g4) on the very next move, before ...e6 would ever trap it in behind the pawn chain."},
+      {san:'a4', explain:"The most testing try: rules out ...b5 (which would have defended the pawn) and prepares to meet ...Bf5 with ideas like Ne5 or Nh4.",
+        alts:[{san:'e3', note:"A calmer approach, planning a simple Bxc4 next move without committing the a-pawn."},{san:'e4', note:"A sharp, well-analysed piece-sacrifice approach (sometimes called the Geller Gambit) that grabs the full centre at once in exchange for letting Black's pieces get very active; roughly balanced with accurate defence on both sides."}]},
+      {san:'Bf5', explain:"This is the whole point of meeting 2.c4 with ...c6 instead of ...e6: the bishop reaches an active diagonal before anything can shut it in. Getting this move played is considered Black's main strategic achievement in the entire system.",
+        alts:[{san:'Na6', note:"A flexible modern try, preparing ...Nb4 or simply ...Nxc4 to win the pawn back at once."}]},
+      {san:'e3', explain:"Prepares to recapture the c4-pawn with the bishop and adds support to d4."},
+      {san:'e6', explain:"Only now, with the bishop already safely developed, does Black complete the pawn structure."},
+      {san:'Bxc4', explain:"Regains the gambit pawn and finishes development of the light-squared bishop."},
+      {san:'Bb4', explain:"Pins the c3-knight — a natural, active continuation that also eyes doubling White's pawns."},
+      {san:'O-O', explain:"Castles into safety."},
+      {san:'O-O', explain:"Black follows suit — both sides have castled and finished development."},
+      {san:'Qe2', explain:"Prepares the thematic central break e3-e4, aiming to build a full pawn centre now that development is complete."}
+    ],
+    traps:[
+      {
+        name:"The boxed-in bishop", result:"A structural pitfall, not a forced loss of material.",
+        moves:['d4','d5','c4','c6','Nf3','Nf6','Nc3','e6'],
+        losingIndex:7,
+        explain:"This one isn't a tactical trap — nothing is lost by force — but it's the single most common structural mistake in the whole Slav complex. Once pawns sit on c6, d5 and e6 together, the c8-bishop has no good diagonal left at all: b7-a8 is usually blocked by Black's own pieces, and the natural f5/g4 diagonal is gone for the rest of the game. This is exactly why theory insists on getting ...Bf5 or ...Bg4 played before committing to an early ...e6. If you ever find yourself with this pawn triangle and an undeveloped light-squared bishop, look for a timely ...e5 break or reroute it via ...Bd6/...Be7 instead — but the clean way to avoid the whole problem is simply move-order: bishop out first, then ...e6."
+      }
+    ]
+  },
+
+  qga: {
+    id:'qga', name:'Accepted', shortName:'QGA', fullName:'Queen\'s Gambit Accepted',
+    tagline:"Black meets 2.c4 by grabbing the pawn at once with ...dxc4, planning to hand it back later for a comfortable lead in development rather than clinging on to it.",
+    mainLine:[
+      {san:'d4', explain:"Claims the centre and opens the c1-bishop's diagonal."},
+      {san:'d5', explain:"The classical central reply."},
+      {san:'c4', explain:"The Queen's Gambit."},
+      {san:'dxc4', explain:"The Queen's Gambit Accepted. Black takes the pawn immediately. This is not really a lasting pawn win — with normal play White regains it within a few moves via Bxc4 or Qa4+ tricks — but the resulting positions are more open than the Declined, rewarding quick, accurate development over long manoeuvring.",
+        alts:[{san:'e6', note:"The Queen's Gambit Declined instead.", linksTo:'qgd'},{san:'c6', note:"The Slav Defense instead.", linksTo:'slav'}]},
+      {san:'Nf3', explain:"The most flexible way to win the pawn back: develops a piece first and keeps deciding between e3/Bxc4 and other set-ups.",
+        alts:[{san:'e4', note:"The Central Variation — grabs the full centre with tempo at once; sharp and ambitious, though the e4-pawn can become a long-term target."},{san:'e3', note:"Also solid, transposing to similar structures after Bxc4."}]},
+      {san:'Nf6', explain:"Natural development that also stops White's e4 from being a free move.",
+        alts:[{san:'a6', note:"The direct approach — prepares ...b5 at once to defend the extra pawn. Needs careful handling: see the Traps tab for what goes wrong if Black overreaches with this plan."},{san:'Bg4', note:"Pins the f3-knight right away — a sharper try."}]},
+      {san:'e3', explain:"A modest, flexible move: prepares Bxc4 without blocking in the dark-squared bishop's best diagonal."},
+      {san:'e6', explain:"Solid development, preparing ...c5 to challenge White's centre and clearing the way for the f8-bishop."},
+      {san:'Bxc4', explain:"Regains the gambit pawn at last. White now stands a tempo up compared with a normal Queen's Gambit Declined, since the bishop reached c4 directly instead of via d3."},
+      {san:'c5', explain:"Strikes at White's centre immediately — the standard freeing break in this structure. Black doesn't want to just sit passively a tempo down."},
+      {san:'O-O', explain:"King safety, keeping options open between dxc5, Qe2 and a4 plans."},
+      {san:'a6', explain:"Prepares ...b5, gaining space and a tempo on the c4-bishop."},
+      {san:'Qe2', explain:"A flexible modern set-up, preparing Rd1 and an eye on the e-file rather than resolving the centre with dxc5 right away."},
+      {san:'b5', explain:"Now well prepared — the a6-pawn already covers b5, unlike the premature version of this same idea. See the Traps tab for what happens when Black rushes this plan too early."},
+      {san:'Bb3', explain:"Retreats to a safer square, still eyeing f7, and keeps the long a2-g8 diagonal available."},
+      {san:'Bb7', explain:"Completes the queenside fianchetto plan, adds pressure down the long diagonal, and supports a further ...c4 space grab later."},
+      {san:'Rd1', explain:"Centralises the rook on the newly-opened d-file, pressing the d-file squares and preparing central breaks."},
+      {san:'Nbd7', explain:"Completes development. Both sides now have roughly balanced, dynamic chances typical of the main-line QGA."}
+    ],
+    traps:[
+      {
+        name:"The greedy b5 grab", result:"White wins material — typically an exchange or more.",
+        moves:['d4','d5','c4','dxc4','e3','b5','a4','c6','axb5','cxb5','Qf3'],
+        losingIndex:9,
+        explain:"Trying to hang on to the extra pawn with an early ...b5 is tempting but dangerous: it spends three or four tempi on pawn moves while badly neglecting development, and it opens the long a8-h1 diagonal right in front of Black's own undefended rook. After 6.Qf3! the queen lands on that empty diagonal — b7 and c6 have both been vacated by Black's own pawn moves — and attacks the a8-rook directly, with no way to defend it and finish development at the same time. The lesson generalises well beyond this exact line: don't spend the opening grabbing and holding a single extra pawn while your king is still in the centre and your pieces are still at home. Development comes first."
+      }
+    ]
+  }
+};
+</script>
+
+<script>
+/* =========================================================================
+   APP LOGIC
+   ========================================================================= */
+const OPENING_ORDER = ['qgd','slav','qga'];
+
+const state = {
+  openingId:'qgd',
+  sanHistory:[],
+  flipped:false,
+  selected:null,
+  legalTargets:null,
+  activeTutorTab:'explain',
+  trapView:null /* {trap, index} */
+};
+try{ const saved = localStorage.getItem('qgt-opening'); if(saved && OPENINGS[saved]) state.openingId = saved; }catch(e){}
+
+function strip(s){ return String(s).replace(/[+#!?]/g,''); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---- replay a SAN list from the start position, validating every move ---- */
+function replay(sanList){
+  const pos = new ChessEngine.Position(ChessEngine.START);
+  const played=[]; let lastMove=null;
+  for(const s of sanList){
+    const legal = pos.legalMoves();
+    let foundMove=null, sanActual=null;
+    for(const m of legal){
+      const cand = pos.san(m, legal);
+      if(strip(cand)===strip(s)){ foundMove=m; sanActual=cand; break; }
+    }
+    if(!foundMove){ break; }
+    pos.makeMove(foundMove);
+    played.push(sanActual);
+    lastMove = {from:foundMove.from, to:foundMove.to};
+  }
+  return {pos, played, lastMove};
+}
+
+function getDisplayData(){
+  if(state.trapView){
+    const list = state.trapView.trap.moves.slice(0, state.trapView.index);
+    const r = replay(list);
+    return {pos:r.pos, sanList:r.played, lastMove:r.lastMove, mode:'trap'};
+  }
+  const r = replay(state.sanHistory);
+  return {pos:r.pos, sanList:r.played, lastMove:r.lastMove, mode:'play'};
+}
+
+/* ---- transposition support -------------------------------------------
+   Two positions are "the same" for book purposes if piece placement, side
+   to move and castling rights match (we deliberately ignore the en-passant
+   square and move counters — irrelevant to whether a line has transposed).
+   Every book line (the main line and every trap) gets its list of position
+   keys precomputed once and cached, so recognizing a transposition is just
+   a key lookup, not a search. ---------------------------------------- */
+function positionKey(pos){
+  const parts = pos.toFen().split(' ');
+  return parts[0]+' '+parts[1]+' '+parts[2];
+}
+function keysForSanList(sanList){
+  const pos = new ChessEngine.Position(ChessEngine.START);
+  const keys=[positionKey(pos)];
+  for(const s of sanList){
+    const legal = pos.legalMoves();
+    const m = legal.find(mm=>strip(pos.san(mm,legal))===strip(s));
+    if(!m) break;
+    pos.makeMove(m);
+    keys.push(positionKey(pos));
+  }
+  return keys;
+}
+function getMainKeys(opening){
+  if(!opening._mainKeys) opening._mainKeys = keysForSanList(opening.mainLine.map(p=>p.san));
+  return opening._mainKeys;
+}
+function getTrapKeys(trap){
+  if(!trap._keys) trap._keys = keysForSanList(trap.moves);
+  return trap._keys;
+}
+function sanListsEqual(a,b){
+  return a.length===b.length && a.every((s,i)=>strip(s)===strip(b[i]));
+}
+
+/* ---- classify the current live game (state.sanHistory) against the book,
+   recognizing a book position even when it was reached by a different move
+   order (transposition) than the one this trainer scripted. ---- */
+function classify(){
+  const opening = OPENINGS[state.openingId];
+  const n = state.sanHistory.length;
+  if(n===0) return {kind:'startpos'};
+
+  const live = replay(state.sanHistory);
+  const currentKey = positionKey(live.pos);
+
+  const mainKeys = getMainKeys(opening);
+  if(n<mainKeys.length && currentKey===mainKeys[n]){
+    const transposed = !sanListsEqual(state.sanHistory, opening.mainLine.slice(0,n).map(p=>p.san));
+    return {kind:'main', ply:opening.mainLine[n-1], index:n-1, transposed};
+  }
+
+  for(const trap of opening.traps){
+    const tKeys = getTrapKeys(trap);
+    if(n<tKeys.length && currentKey===tKeys[n]){
+      const atIndex = n-1;
+      const stage = atIndex<trap.losingIndex ? 'approach' : (atIndex===trap.losingIndex ? 'justFellIn' : 'aftermath');
+      const transposed = !sanListsEqual(state.sanHistory, trap.moves.slice(0,n));
+      return {kind:'trap', trap, atIndex, stage, transposed};
+    }
+  }
+
+  if(n>=1){
+    const prefixLen = n-1;
+    if(prefixLen<mainKeys.length){
+      const prefixReplay = replay(state.sanHistory.slice(0,prefixLen));
+      const prefixKey = positionKey(prefixReplay.pos);
+      if(prefixKey===mainKeys[prefixLen]){
+        const plyData = opening.mainLine[prefixLen];
+        const lastSan = state.sanHistory[prefixLen];
+        const found = (plyData.alts||[]).find(a=>strip(a.san)===strip(lastSan));
+        if(found){
+          const transposed = !sanListsEqual(state.sanHistory.slice(0,prefixLen), opening.mainLine.slice(0,prefixLen).map(p=>p.san));
+          return {kind:'alt', alt:found, mainMove:plyData.san, index:prefixLen, transposed};
+        }
+      }
+    }
+  }
+
+  return {kind:'free'};
+}
+
+/* =========================================================================
+   OFF-BOOK MOVE ASSESSMENT
+   Backed by a real search engine now (see the SEARCH ENGINE block inside
+   ChessEngine above) — negamax with alpha-beta pruning, capture quiescence
+   and iterative deepening under a short wall-clock budget, with standard
+   midgame piece-square tables. It looks several plies ahead and returns
+   real centipawn evaluations and best-move suggestions, not just an
+   immediate-capture scan — but it's still shallow and time-boxed, so very
+   deep multi-move tricks (the kind behind the hand-curated traps elsewhere
+   in this trainer) can still slip past it. The UI says so every time.
+
+   The trainer's scripted content (main lines, alternatives, traps) is a
+   White repertoire — but off-book move assessment is symmetric: whichever
+   side just played an unscripted move gets the same graded verdict (engine
+   delta vs that side's own best try, plus soft opening-principle notes)
+   and the same plain-language read of what the move appears to be going
+   for, regardless of color.
+   ========================================================================= */
+const PIECE_NAME = {P:'pawn', N:'knight', B:'bishop', R:'rook', Q:'queen', K:'king'};
+const PIECE_APPROX_VALUE = {P:1, N:3, B:3, R:5, Q:9};
+const ENGINE_MAX_DEPTH = 5;
+const ENGINE_BUDGET_MS = 450;   // per fastRootSearch call
+const EXACT_BUDGET_MS = 400;    // per evaluateMoveExact call
+
+/* Small memo cache keyed by position (+ move, for the exact-score lookup)
+   so re-rendering the SAME position — switching tutor tabs, for instance —
+   doesn't re-run the search. */
+const engineCache = new Map();
+function cachedFastRoot(pos){
+  const key = positionKey(pos);
+  if(engineCache.has(key)) return engineCache.get(key);
+  const r = ChessEngine.fastRootSearch(pos, {maxDepth:ENGINE_MAX_DEPTH, timeBudgetMs:ENGINE_BUDGET_MS});
+  engineCache.set(key, r);
+  return r;
+}
+function cachedExactMove(pos, move, depth){
+  const key = positionKey(pos)+'|'+move.from+'-'+move.to+'-'+(move.promotion||'')+'@'+depth;
+  if(engineCache.has(key)) return engineCache.get(key);
+  const r = ChessEngine.evaluateMoveExact(pos, move, depth, EXACT_BUDGET_MS);
+  engineCache.set(key, r);
+  return r;
+}
+
+function countDevelopedMinors(pos, side){
+  const homeSquares = side===ChessEngine.WHITE
+    ? [ChessEngine.sq(1,0), ChessEngine.sq(2,0), ChessEngine.sq(5,0), ChessEngine.sq(6,0)]
+    : [ChessEngine.sq(1,7), ChessEngine.sq(2,7), ChessEngine.sq(5,7), ChessEngine.sq(6,7)];
+  let developed=0;
+  for(const s of homeSquares){
+    const p = pos.board[s];
+    if(!(p && ChessEngine.color(p)===side && (ChessEngine.type(p)==='N'||ChessEngine.type(p)==='B'))) developed++;
+  }
+  return developed;
+}
+
+/* Explains what an off-book move appears to be going for — a plain
+   description of its apparent point, independent of whether it's actually
+   good (that's a separate, graded verdict — see assessFreeMove below).
+   Runs for either side. Combines up to two observations, most concrete
+   first. `side` is the mover (ChessEngine.WHITE or ChessEngine.BLACK). */
+function describeMoveIdea(posBefore, posAfter, moveObj, sanPlayed, side){
+  const moverName = side===ChessEngine.WHITE ? 'White' : 'Black';
+  const opponentSide = side===ChessEngine.WHITE ? ChessEngine.BLACK : ChessEngine.WHITE;
+  if(!moveObj) return "Steps outside this trainer's scripted line.";
+  if(moveObj.castle){
+    return `Castles to safety and connects the rooks — a normal step toward finishing development.`;
+  }
+  const t = moveObj.piece;
+  const toAlg = ChessEngine.algebraic(moveObj.to);
+  const givesCheck = /[+#]$/.test(sanPlayed||'');
+  const clauses = [];
+  const homeRank = side===ChessEngine.WHITE ? 0 : 7;
+
+  if(moveObj.capture){
+    const capSq = moveObj.ep ? ChessEngine.sq(ChessEngine.fileOf(moveObj.to), ChessEngine.rankOf(moveObj.from)) : moveObj.to;
+    const capturedBefore = posBefore.board[capSq];
+    const capName = capturedBefore ? (PIECE_NAME[ChessEngine.type(capturedBefore)]||'piece') : 'piece';
+    clauses.push(`captures the ${capName} on ${toAlg}`);
+  }
+
+  const minorHome = {};
+  [ChessEngine.sq(1,homeRank), ChessEngine.sq(2,homeRank), ChessEngine.sq(5,homeRank), ChessEngine.sq(6,homeRank)].forEach(s=>{ minorHome[s]=true; });
+  if((t==='N'||t==='B') && minorHome[moveObj.from]){
+    const wing = ChessEngine.fileOf(moveObj.to)<=3 ? 'queenside' : 'kingside';
+    clauses.push(`develops the ${PIECE_NAME[t]} toward the ${wing}, continuing development`);
+  }
+
+  if(t==='P' && !moveObj.capture){
+    const file = ChessEngine.fileOf(moveObj.to);
+    if(file===3 || file===4){
+      clauses.push(`strikes in the centre, challenging ${moverName==='White'?"Black's":"White's"} pawn structure`);
+    } else if(file<=1 || file>=6){
+      clauses.push(`gains space on the ${file<=1?'queenside':'kingside'}`);
+    }
+  }
+
+  if(clauses.length<2 && (t==='N'||t==='B'||t==='R'||t==='Q')){
+    for(let sqIdx=0; sqIdx<64; sqIdx++){
+      if(sqIdx===moveObj.to) continue;
+      const p = posAfter.board[sqIdx];
+      if(!p || ChessEngine.color(p)!==opponentSide) continue;
+      const attackedBefore = posBefore.attacksSquare(sqIdx, side);
+      const attackedAfter = posAfter.attacksSquare(sqIdx, side);
+      if(attackedAfter && !attackedBefore){
+        clauses.push(`puts pressure on the ${PIECE_NAME[ChessEngine.type(p)]} on ${ChessEngine.algebraic(sqIdx)}`);
+        break;
+      }
+    }
+  }
+
+  if(t==='Q' && clauses.length<2) clauses.push(`brings the queen into play early`);
+  if(givesCheck) clauses.push(`gives check, gaining a forcing tempo`);
+  if(!clauses.length) clauses.push(`repositions a piece, adjusting ${moverName}'s setup`);
+
+  const text = clauses.slice(0,2).join(', and ');
+  return text.charAt(0).toUpperCase()+text.slice(1)+'.';
+}
+function opponentNameOf(name){ return name==='White'?'Black':'White'; }
+
+/* Does the CURRENT position (reached however it was reached — including
+   off-book) happen to coincide exactly with a point along one of this
+   opening's hand-curated trap lines? Matched purely by board position, not
+   move order or move count, so it catches an off-book path that
+   accidentally transposes into a known trap. Returns
+   {trap, atIndex, stage} or null. */
+function findTrapMatchForPosition(pos, opening){
+  const key = positionKey(pos);
+  for(const trap of opening.traps){
+    const keys = getTrapKeys(trap);
+    const idx = keys.indexOf(key);
+    if(idx>0){
+      const atIndex = idx-1;
+      const stage = atIndex<trap.losingIndex ? 'approach' : (atIndex===trap.losingIndex ? 'justFellIn' : 'aftermath');
+      return {trap, atIndex, stage};
+    }
+  }
+  return null;
+}
+
+/* Assesses the move that was just played to reach `display` (only meaningful
+   when classify() returned kind:'free'). Symmetric between colors: whichever
+   side just moved gets the same graded verdict and the same "what is this
+   going for" read. Returns {forWhite, moverSide, label, tone, hang, notes,
+   idea, whiteEval, depthBefore, depthNow, bestSanBefore, opponentBestSan,
+   delta, trapMatch}. */
+function assessFreeMove(display, opening){
+  const pos = display.pos; // position AFTER the move; pos.turn is the side to reply
+  const moverSide = pos.turn===ChessEngine.WHITE ? ChessEngine.BLACK : ChessEngine.WHITE;
+  const forWhite = moverSide===ChessEngine.WHITE;
+  const lastMove = display.lastMove;
+  const posBefore = replay(display.sanList.slice(0,-1)).pos;
+  const playedMoveObj = lastMove ? posBefore.legalMovesFrom(lastMove.from).find(m=>m.to===lastMove.to) : null;
+  const lastSan = display.sanList[display.sanList.length-1] || '';
+
+  // 1) How much worse was the move actually played than the mover's own best try, per the engine?
+  const searchBefore = cachedFastRoot(posBefore);
+  let delta = 0, bestSanBefore = null, depthBefore = searchBefore.depthReached;
+  if(searchBefore.best){
+    bestSanBefore = searchBefore.best.san;
+    const isBestMove = playedMoveObj && searchBefore.best.move.from===playedMoveObj.from && searchBefore.best.move.to===playedMoveObj.to;
+    let playedScore = searchBefore.best.score;
+    if(playedMoveObj && !isBestMove){
+      const ex = cachedExactMove(posBefore, playedMoveObj, Math.max(1,depthBefore));
+      if(ex && ex.score!=null) playedScore = ex.score;
+    }
+    delta = Math.max(0, searchBefore.best.score - playedScore);
+  }
+
+  // 2) What can the opponent do now, and how does the position stand for White?
+  const searchNow = cachedFastRoot(pos);
+  const opponentBestSan = searchNow.best ? searchNow.best.san : null;
+  const whiteEval = searchNow.best ? (pos.turn===ChessEngine.WHITE ? searchNow.best.score : -searchNow.best.score) : 0;
+  let hang = null;
+  if(searchNow.best && searchNow.best.move.capture){
+    const capturedPiece = pos.board[searchNow.best.move.to];
+    if(capturedPiece){
+      hang = {square:searchNow.best.move.to, pieceType:ChessEngine.type(capturedPiece),
+              gain:PIECE_APPROX_VALUE[ChessEngine.type(capturedPiece)]||3, refutationSan:opponentBestSan};
+    }
+  }
+
+  // 3) What does this move appear to be going for? Same treatment for both colors.
+  const idea = describeMoveIdea(posBefore, pos, playedMoveObj, lastSan, moverSide);
+
+  // 4) Soft opening-principle notes — parameterized by whichever side just moved.
+  const notes = [];
+  const moveCount = display.sanList.length;
+  const moverMoveNumber = Math.ceil(moveCount/2);
+  const inOpeningPhase = moveCount<=26;
+  const moverName = forWhite ? 'White' : 'Black';
+
+  if(inOpeningPhase){
+    const devCount = countDevelopedMinors(pos, moverSide);
+    if(moverMoveNumber>=5 && devCount<=1){
+      notes.push(`development is falling behind — ${moverMoveNumber} moves played but only ${devCount===0?'no':devCount} minor piece${devCount===1?"":"s"} developed`);
+    }
+    if(/^Q/.test(strip(lastSan)) && moverMoveNumber<=6 && devCount<=2){
+      notes.push(`brings the queen out early, before most of the minor pieces — it can become a target and lose time to moves made with tempo`);
+    }
+    const kingSq = pos.kingSquare(moverSide);
+    const homeRank = forWhite ? 0 : 7;
+    const homeKingSq = ChessEngine.sq(4,homeRank);
+    const castledSquares = [ChessEngine.sq(6,homeRank),ChessEngine.sq(2,homeRank)];
+    if(kingSq===homeKingSq && !castledSquares.includes(kingSq) && moverMoveNumber>=9){
+      notes.push(`the ${moverName} king is still uncastled after ${moverMoveNumber} moves — worth checking on king safety soon`);
+    }
+  }
+
+  // 5) Same tiered verdict for both colors.
+  let label, tone;
+  if(delta>=200){ label='Hangs material'; tone='bad'; }
+  else if(delta>=60){ label='Slightly loose'; tone='warn'; }
+  else if(notes.length){ label='Playable, with reservations'; tone='warn'; }
+  else { label='Looks reasonable'; tone='ok'; }
+
+  // 6) Did this off-book path happen to transpose into a known trap position?
+  const trapMatch = opening ? findTrapMatchForPosition(pos, opening) : null;
+
+  return {forWhite, moverSide, label, tone, hang, notes, idea, whiteEval, delta,
+          bestSanBefore, opponentBestSan, depthBefore, depthNow:searchNow.depthReached, trapMatch};
+}
+
+function playSanOnHistory(sanStr){
+  const r = replay(state.sanHistory);
+  const legal = r.pos.legalMoves();
+  const m = legal.find(mm=>strip(r.pos.san(mm,legal))===strip(sanStr));
+  if(!m) return false;
+  const sanActual = r.pos.san(m, legal);
+  state.sanHistory.push(sanActual);
+  state.selected=null; state.legalTargets=null;
+  return true;
+}
+
+function switchOpening(id){
+  if(!OPENINGS[id]) return;
+  state.openingId=id; state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null;
+  state.activeTutorTab='explain';
+  try{ localStorage.setItem('qgt-opening', id); }catch(e){}
+  render();
+}
+function startTrapView(ti){
+  const opening=OPENINGS[state.openingId];
+  const trap=opening.traps[ti]; if(!trap) return;
+  state.trapView={trap, index:0}; state.activeTutorTab='traps'; state.selected=null; state.legalTargets=null;
+  render();
+}
+function tryTrapYourself(ti){
+  const opening=OPENINGS[state.openingId];
+  const trap=opening.traps[ti]; if(!trap) return;
+  state.sanHistory = trap.moves.slice(0, trap.losingIndex);
+  state.trapView=null; state.selected=null; state.legalTargets=null; state.activeTutorTab='explain';
+  render();
+}
+
+function onSquareClick(idx){
+  const r = replay(state.sanHistory);
+  const pos = r.pos;
+  if(state.selected===null){
+    const piece=pos.board[idx];
+    if(piece && ChessEngine.color(piece)===pos.turn){
+      const legal=pos.legalMovesFrom(idx);
+      if(legal.length){ state.selected=idx; state.legalTargets=legal; render(); }
+    }
+    return;
+  }
+  if(idx===state.selected){ state.selected=null; state.legalTargets=null; render(); return; }
+  const otherPiece=pos.board[idx];
+  if(otherPiece && ChessEngine.color(otherPiece)===pos.turn){
+    const legal=pos.legalMovesFrom(idx);
+    state.selected=idx; state.legalTargets=legal; render(); return;
+  }
+  const move=(state.legalTargets||[]).find(m=>m.to===idx);
+  if(!move) return;
+  const legalAll=pos.legalMoves();
+  const sanActual=pos.san(move, legalAll);
+  state.sanHistory.push(sanActual);
+  state.selected=null; state.legalTargets=null;
+  render();
+}
+
+/* ---------------------------- rendering ---------------------------- */
+function render(){
+  const opening = OPENINGS[state.openingId];
+  const cls = classify();
+  const display = getDisplayData();
+  const freeAssessment = (cls.kind==='free' && display.mode==='play') ? assessFreeMove(display, opening) : null;
+
+  renderTabs();
+  renderBlurb(opening);
+  renderStatusLine(opening, cls, display, freeAssessment);
+  renderBoardUI(display);
+  renderHistoryRibbon(display);
+  renderBookButton(opening, cls);
+  renderBanner(opening, cls, display, freeAssessment);
+  renderTutorTabsUI();
+  document.getElementById('panel-explain').innerHTML = buildExplainHTML(opening, cls, display, freeAssessment);
+  document.getElementById('panel-alts').innerHTML = buildAltsHTML(opening, cls, display);
+  document.getElementById('panel-traps').innerHTML = buildTrapsHTML(opening, cls, display);
+
+  document.getElementById('btnBack').disabled = (state.sanHistory.length===0 && !state.trapView);
+  document.getElementById('btnReset').disabled = (state.sanHistory.length===0 && !state.trapView);
+}
+
+function renderTabs(){
+  const el = document.getElementById('openingTabs');
+  el.innerHTML = OPENING_ORDER.map(id=>{
+    const o = OPENINGS[id];
+    const active = id===state.openingId ? ' active' : '';
+    return `<button class="tab${active}" data-opening="${id}">${escapeHtml(o.name)} <small>${escapeHtml(o.shortName)}</small></button>`;
+  }).join('');
+}
+
+function renderBlurb(opening){
+  document.getElementById('blurb').innerHTML =
+    `<h2>${escapeHtml(opening.fullName)}</h2><p>${escapeHtml(opening.tagline)}</p>`;
+}
+
+function renderStatusLine(opening, cls, display, freeAssessment){
+  const textEl = document.getElementById('statusText');
+  const badgeEl = document.getElementById('statusBadge');
+  if(state.trapView){
+    textEl.textContent = `Trap demo — step ${state.trapView.index} of ${state.trapView.trap.moves.length}`;
+    badgeEl.textContent = 'TRAP DEMO'; badgeEl.className='badge trap';
+    return;
+  }
+  const moveNumber = Math.floor(display.sanList.length/2)+1;
+  const sideToMove = display.pos.turn===ChessEngine.WHITE ? 'White' : 'Black';
+  const noMoves = display.pos.legalMoves().length===0;
+  if(noMoves){
+    textEl.textContent = display.pos.inCheck(display.pos.turn) ? 'Checkmate.' : 'Stalemate.';
+  } else if(display.sanList.length===0){
+    textEl.textContent = 'Starting position — White to play';
+  } else {
+    textEl.textContent = `${sideToMove} to play — move ${moveNumber}`;
+  }
+  const map = {
+    startpos:['START','start'], main:['BOOK','main'], alt:['ALTERNATIVE','alt'], trap:['TRAP','trap'], free:['OFF BOOK','free']
+  };
+  let key = cls.kind;
+  let label = map[key] ? map[key][0] : 'FREE';
+  let cssClass = map[key] ? map[key][1] : 'free';
+  if(key==='main' && cls.index===opening.mainLine.length-1) label='COMPLETE';
+  if(key==='trap'){
+    label = cls.stage==='justFellIn' ? 'TRAP!' : (cls.stage==='aftermath' ? 'TRAP LINE' : 'CAUTION');
+  }
+  if(key==='free' && freeAssessment){
+    if(freeAssessment.tone==='bad'){ label='BLUNDER'; cssClass='trap'; }
+    else if(freeAssessment.tone==='warn'){ label='OFF BOOK ⚠'; cssClass='alt'; }
+    else { label='OFF BOOK ✓'; cssClass='main'; }
+  }
+  if(cls.transposed) label += ' ⇄';
+  badgeEl.textContent = label; badgeEl.className = 'badge '+cssClass;
+}
+
+function renderBoardUI(display){
+  const boardEl = document.getElementById('board');
+  boardEl.innerHTML='';
+  const pos = display.pos;
+  const lastMove = display.lastMove;
+  const selected = state.trapView ? null : state.selected;
+  const legalTargets = state.trapView ? [] : (state.legalTargets||[]);
+  for(let displayRow=0; displayRow<8; displayRow++){
+    for(let displayCol=0; displayCol<8; displayCol++){
+      let engineFile, engineRank;
+      if(!state.flipped){ engineRank = 7-displayRow; engineFile = displayCol; }
+      else { engineRank = displayRow; engineFile = 7-displayCol; }
+      const idx = ChessEngine.sq(engineFile, engineRank);
+      const isLight = (engineFile+engineRank)%2===1;
+      const cellBtn = document.createElement('button');
+      cellBtn.type='button';
+      cellBtn.className = 'sq '+(isLight?'light':'dark');
+      cellBtn.dataset.idx = idx;
+      cellBtn.setAttribute('aria-label', ChessEngine.algebraic(idx));
+      if(selected===idx) cellBtn.classList.add('selected');
+      if(lastMove && (lastMove.from===idx || lastMove.to===idx)) cellBtn.classList.add('lastmove');
+      if(displayCol===0){ const r=document.createElement('span'); r.className='coord rank'; r.textContent=(engineRank+1); cellBtn.appendChild(r); }
+      if(displayRow===7){ const f=document.createElement('span'); f.className='coord file'; f.textContent='abcdefgh'[engineFile]; cellBtn.appendChild(f); }
+      const piece = pos.board[idx];
+      if(piece){
+        const svgNS='http://www.w3.org/2000/svg';
+        const svg=document.createElementNS(svgNS,'svg');
+        svg.setAttribute('class','piece '+(ChessEngine.color(piece)===ChessEngine.WHITE?'white':'black'));
+        svg.setAttribute('viewBox','0 0 45 45');
+        const use=document.createElementNS(svgNS,'use');
+        use.setAttributeNS('http://www.w3.org/1999/xlink','href','#pc-'+piece.toLowerCase());
+        use.setAttribute('href','#pc-'+piece.toLowerCase());
+        svg.appendChild(use);
+        cellBtn.appendChild(svg);
+      }
+      const targetMove = legalTargets.find(m=>m.to===idx);
+      if(targetMove){
+        const marker=document.createElement('span');
+        marker.className = targetMove.capture ? 'ring' : 'dot';
+        cellBtn.appendChild(marker);
+      }
+      boardEl.appendChild(cellBtn);
+    }
+  }
+}
+
+function renderHistoryRibbon(display){
+  const el = document.getElementById('historyRibbon');
+  const list = display.sanList;
+  if(!list.length){ el.innerHTML = `<button class="empty" disabled>No moves played yet — tap the board to begin.</button>`; return; }
+  let html='';
+  for(let i=0;i<list.length;i++){
+    if(i%2===0) html += `<span class="num">${i/2+1}.</span>`;
+    const isCurrent = (i===list.length-1);
+    const jumpAttr = display.mode==='play' ? ` data-jump="${i}"` : '';
+    html += `<button class="${isCurrent?'current':''}"${jumpAttr}>${escapeHtml(list[i])}</button>`;
+  }
+  el.innerHTML = html;
+  el.scrollLeft = el.scrollWidth;
+}
+
+function renderBookButton(opening, cls){
+  const btn = document.getElementById('btnBookMove');
+  const nextIndex = state.sanHistory.length;
+  const onBook = (cls.kind==='startpos' || cls.kind==='main');
+  if(!state.trapView && onBook && nextIndex<opening.mainLine.length){
+    btn.hidden=false;
+    btn.innerHTML = `<span>▶ Play the book move</span><span class="mono">${escapeHtml(opening.mainLine[nextIndex].san)}</span>`;
+  } else {
+    btn.hidden=true;
+  }
+}
+
+function renderBanner(opening, cls, display, freeAssessment){
+  const el = document.getElementById('banner');
+  if(display.mode==='play' && display.sanList.length>0 && display.pos.legalMoves().length===0){
+    el.hidden=false; el.className='banner ok';
+    el.innerHTML = display.pos.inCheck(display.pos.turn) ? '<b>Checkmate.</b> The game has ended.' : '<b>Stalemate.</b> The game is drawn.';
+    return;
+  }
+  if(!state.trapView && cls.kind==='trap' && cls.stage==='justFellIn'){
+    el.hidden=false; el.className='banner';
+    el.innerHTML = `<b>⚠ ${escapeHtml(cls.trap.name)}!</b> That's the tempting move that loses — see the full explanation in the Explain tab below.`;
+    return;
+  }
+  if(!state.trapView && cls.kind==='free' && freeAssessment && freeAssessment.tone==='bad'){
+    el.hidden=false; el.className='banner';
+    const moverName = freeAssessment.forWhite ? 'White' : 'Black';
+    const opponentName = freeAssessment.forWhite ? 'Black' : 'White';
+    if(freeAssessment.hang){
+      const pieceName = PIECE_NAME[freeAssessment.hang.pieceType]||'piece';
+      const sq = ChessEngine.algebraic(freeAssessment.hang.square);
+      el.innerHTML = `<b>⚠ That hangs material.</b> The ${escapeHtml(pieceName)} on <span class="mono">${escapeHtml(sq)}</span> can be won — see the Explain tab for the detail.`;
+    } else {
+      el.innerHTML = `<b>⚠ That's a significant slip.</b> The engine now rates the position well in ${escapeHtml(opponentName)}'s favor — see the Explain tab for the detail.`;
+    }
+    return;
+  }
+  if(!state.trapView && cls.kind==='main' && cls.index===opening.mainLine.length-1){
+    el.hidden=false; el.className='banner ok';
+    el.innerHTML = `<b>Main line complete.</b> You've reached the end of this trainer's scripted moves for the ${escapeHtml(opening.fullName)}.`;
+    return;
+  }
+  el.hidden=true;
+}
+
+function renderTutorTabsUI(){
+  document.querySelectorAll('.ttab').forEach(b=>b.classList.toggle('active', b.dataset.panel===state.activeTutorTab));
+  document.querySelectorAll('.tpanel').forEach(p=>p.classList.toggle('active', p.id==='panel-'+state.activeTutorTab));
+}
+
+function transpositionNoteHtml(cls){
+  if(!cls.transposed) return '';
+  return `<p class="transpo-note">⇄ <b>Reached by transposition.</b> A different move order got you to this exact book position — the app matched it by position, not move order, so everything below still applies.</p>`;
+}
+
+function buildExplainHTML(opening, cls, display, freeAssessment){
+  let html = `<div class="tag-intro">${escapeHtml(opening.tagline)}</div>`;
+  const playedCount = display.sanList.length;
+  html += `<div class="step-count">${playedCount} half-move${playedCount===1?'':'s'} played · this trainer's book runs ${opening.mainLine.length} half-moves deep</div>`;
+
+  if(cls.kind==='startpos'){
+    html += `<h2>Starting position</h2><p>Make the first move on the board yourself, or open the <b>Alternatives</b> tab to see the recommended move and play it with one tap.</p>`;
+  } else if(cls.kind==='main'){
+    const playedSan = state.sanHistory[cls.index] || cls.ply.san;
+    html += `<h2 class="mono">${escapeHtml(playedSan)}</h2>`;
+    html += transpositionNoteHtml(cls);
+    html += `<p>${escapeHtml(cls.ply.explain)}</p>`;
+    if(cls.index===opening.mainLine.length-1){
+      html += `<p><b>End of this trainer's scripted line.</b> From here you're in genuine middlegame territory — keep exploring the position freely, or reset to study one of the alternatives instead.</p>`;
+    }
+  } else if(cls.kind==='alt'){
+    html += `<h2 class="mono">${escapeHtml(cls.alt.san)} <small style="font-family:'Source Sans 3',sans-serif;font-weight:400;color:var(--ink-faint)">— alternative</small></h2>`;
+    html += transpositionNoteHtml(cls);
+    html += `<p>${escapeHtml(cls.alt.note)}</p>`;
+    html += `<p style="font-size:.85rem;color:var(--ink-faint)">The main line instead recommends <span class="mono">${escapeHtml(cls.mainMove)}</span> here.</p>`;
+  } else if(cls.kind==='trap'){
+    html += transpositionNoteHtml(cls);
+    if(cls.stage==='justFellIn'){
+      html += `<h2 style="color:var(--garnet)">⚠ ${escapeHtml(cls.trap.name)}</h2><p>${escapeHtml(cls.trap.explain)}</p><p class="mono" style="font-size:.85rem;color:var(--garnet)">${escapeHtml(cls.trap.result)}</p>`;
+    } else if(cls.stage==='aftermath'){
+      html += `<h2 style="color:var(--garnet)">${escapeHtml(cls.trap.name)} — the point continues</h2><p>${escapeHtml(cls.trap.explain)}</p>`;
+    } else {
+      html += `<h2>Heading toward a known pitfall</h2><p>This exact position can lead into <b>${escapeHtml(cls.trap.name)}</b> a little further on. Open the <b>Traps &amp; pitfalls</b> tab to see the full point before it happens.</p>`;
+    }
+  } else {
+    html += buildFreeMoveHTML(opening, freeAssessment);
+  }
+  return html;
+}
+
+const TONE_COLOR = {bad:'var(--garnet)', warn:'var(--brass-strong)', ok:'var(--moss)', neutral:'var(--ink-faint)'};
+
+/* Centipawns -> a signed "+0.35"-style pawn figure, always from White's
+   perspective (positive = good for White) wherever it's shown in the UI. */
+function formatEval(cp){ return (cp>=0?'+':'−')+Math.abs(cp/100).toFixed(2); }
+
+function engineFooterHtml(depth){
+  return `<p style="font-size:.8rem;color:var(--ink-faint)">Backed by a real search engine built into this page — alpha-beta pruning with capture quiescence, searching ${depth||'a few'} ply ahead in the time available. It's genuine look-ahead, not just a one-move scan, but it's still shallow and time-boxed: very deep multi-move tricks (like the hand-curated traps in the Traps tab) can still slip past it. Treat the evaluation as a strong nudge, not the final word, and use <b>Back</b> any time to return to the scripted line.</p>`;
+}
+
+function buildFreeMoveHTML(opening, a){
+  if(!a){
+    return `<h2>Outside the book</h2><p>That's a fully legal move, but it steps outside this trainer's scripted line for the ${escapeHtml(opening.fullName)}.</p>`;
+  }
+  const moverName = a.forWhite ? 'White' : 'Black';
+  const opponentName = a.forWhite ? 'Black' : 'White';
+  const evalLine = `<p class="mono" style="font-size:.85rem;color:var(--ink-faint)">Engine evaluation: <b style="color:var(--ink)">${formatEval(a.whiteEval)}</b> for White (search depth ${a.depthNow||a.depthBefore||'—'})${a.opponentBestSan ? `, top continuation from here: <span class="mono">${escapeHtml(a.opponentBestSan)}</span>` : ''}</p>`;
+
+  let html = `<h2>Outside the book — ${escapeHtml(moverName)}'s move</h2>`;
+  html += `<p class="mono" style="font-weight:700;font-size:1.02rem;color:${TONE_COLOR[a.tone]}">${escapeHtml(a.label)}</p>`;
+
+  if(a.trapMatch){
+    html += `<p>⚠ <b>Heads up</b> — despite going off-book, this exact position matches a step in <b>${escapeHtml(a.trapMatch.trap.name)}</b>. See the <b>Traps &amp; pitfalls</b> tab for the full point.</p>`;
+  }
+
+  html += `<h3>What ${escapeHtml(moverName)} is going for</h3><p>${escapeHtml(a.idea)}</p>`;
+
+  if(a.hang && (a.tone==='bad' || a.tone==='warn')){
+    const pieceName = PIECE_NAME[a.hang.pieceType]||'piece';
+    const alg = ChessEngine.algebraic(a.hang.square);
+    html += `<p>That leaves the ${escapeHtml(moverName)} ${escapeHtml(pieceName)} on <span class="mono">${escapeHtml(alg)}</span> insufficiently defended. `
+      + `${escapeHtml(opponentName)} can come out ahead by roughly ${a.hang.gain} point${a.hang.gain===1?'':'s'} of material`
+      + (a.hang.refutationSan ? `, starting with <span class="mono">${escapeHtml(a.hang.refutationSan)}</span>` : '')
+      + `.</p>`;
+  } else if(a.tone==='bad'){
+    html += `<p>Nothing hangs outright to a single capture, but the engine's look-ahead rates this well below ${escapeHtml(moverName)}'s best option here — likely a quieter positional or tactical slip rather than a simple one-move blunder.</p>`;
+  } else if(a.hang){
+    // A capture is technically available but the engine still rates this move as fine overall
+    // (e.g. it's just the ordinary gambit pawn, recoverable as usual) — worth a neutral mention,
+    // not a warning.
+    const pieceName = PIECE_NAME[a.hang.pieceType]||'piece';
+    const alg = ChessEngine.algebraic(a.hang.square);
+    html += `<p>${escapeHtml(opponentName)} can pick up the ${escapeHtml(pieceName)} on <span class="mono">${escapeHtml(alg)}</span>${a.hang.refutationSan ? ` with <span class="mono">${escapeHtml(a.hang.refutationSan)}</span>` : ''}, but the engine doesn't rate that as a real problem here — likely just the ordinary give-and-take of this structure, not a consequence specific to this move.</p>`;
+  } else {
+    html += `<p>No immediate way to win material was found there — nothing is left hanging by this move.</p>`;
+  }
+
+  if(a.delta>=30 && a.bestSanBefore){
+    html += `<p>The engine's preferred try in this position was <span class="mono">${escapeHtml(a.bestSanBefore)}</span>, which keeps the evaluation about ${(a.delta/100).toFixed(2)} pawn${a.delta>=150?'s':''} better for ${escapeHtml(moverName)} than the move actually played.</p>`;
+  }
+
+  if(a.notes.length){
+    html += `<p>${a.notes.map(n=>escapeHtml(n.charAt(0).toUpperCase()+n.slice(1))).join('. ')}.</p>`;
+  } else if(!a.hang && a.tone==='ok'){
+    html += `<p>No obvious opening-principle issues either — this looks like a sound, playable move that simply isn't part of this trainer's scripted repertoire. Plenty of reasonable moves exist beyond a single book line.</p>`;
+  }
+
+  html += evalLine;
+  html += engineFooterHtml(a.depthNow);
+  return html;
+}
+
+function buildAltsHTML(opening, cls, display){
+  const nextIndex = state.sanHistory.length;
+  const onBook = (cls.kind==='startpos' || cls.kind==='main');
+  if(state.trapView){
+    return `<p>Alternatives are shown for the live board, not the trap demo. Tap <b>Exit demo</b> in the Traps tab first.</p>`;
+  }
+  if(!onBook){
+    if(cls.kind==='free' && display && display.mode==='play'){
+      return buildEngineAltsHTML(display);
+    }
+    return `<p>Alternatives are shown for on-book positions. Use <b>Back</b> or <b>Reset</b> to return to a book position and see the recommended move and its alternatives here.</p>`;
+  }
+  if(nextIndex>=opening.mainLine.length){
+    return `<p>You've reached the end of the scripted main line — there's no further recommended move to show here. The position is yours to explore.</p>`;
+  }
+  const ply = opening.mainLine[nextIndex];
+  let html = `<h3>Next book move</h3><div class="alt-list">`;
+  html += `<div class="alt-row"><button class="mv" data-play="${escapeHtml(ply.san)}">${escapeHtml(ply.san)}</button><div class="note"><b>Recommended.</b> ${escapeHtml(ply.explain)}</div></div>`;
+  (ply.alts||[]).forEach(a=>{
+    const attr = a.linksTo ? `data-switch="${escapeHtml(a.linksTo)}"` : `data-play="${escapeHtml(a.san)}"`;
+    html += `<div class="alt-row"><button class="mv" ${attr}>${escapeHtml(a.san)}</button><div class="note">${escapeHtml(a.note)}</div></div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+/* Off-book alternatives: no scripted "next book move" exists here, so instead
+   show the built-in engine's own top candidate moves for whichever side is
+   to move — clickable, same as the scripted alternatives are. Only the #1
+   entry gets an exact eval number shown (see fastRootSearch/evaluateMoveExact
+   split — entries beyond the best move are pruning bounds, not exact scores). */
+function buildEngineAltsHTML(display){
+  const pos = display.pos;
+  if(pos.legalMoves().length===0){
+    return `<p>No moves available here — the game has ended (checkmate or stalemate).</p>`;
+  }
+  const sideToMove = pos.turn===ChessEngine.WHITE ? 'White' : 'Black';
+  const search = cachedFastRoot(pos);
+  if(!search.best){
+    return `<p>The engine couldn't find a suggestion here.</p>`;
+  }
+  let html = `<h3>Engine suggestions for ${escapeHtml(sideToMove)}</h3>`;
+  html += `<p style="font-size:.85rem;color:var(--ink-faint)">You're off this trainer's scripted line, so these are the built-in engine's own top picks from here (search depth ${search.depthReached}), not book theory.</p>`;
+  html += `<div class="alt-list">`;
+  const top = search.moves.slice(0,3);
+  top.forEach((m,i)=>{
+    const tag = i===0 ? 'Engine\'s top choice.' : 'Also worth considering.';
+    const evalTxt = i===0 ? formatEval(pos.turn===ChessEngine.WHITE?m.score:-m.score) : '';
+    html += `<div class="alt-row"><button class="mv" data-play="${escapeHtml(m.san)}">${escapeHtml(m.san)}</button><div class="note"><b>${tag}</b>${evalTxt?` <span class="mono" style="color:var(--ink-faint)">(${escapeHtml(evalTxt)})</span>`:''}</div></div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function buildTrapsHTML(opening, cls, display){
+  let html='';
+  if(state.trapView){
+    const tv = state.trapView;
+    html += `<div class="trapview-bar"><span>${escapeHtml(tv.trap.name)} — step ${tv.index} / ${tv.trap.moves.length}</span><span class="steps">`
+      + `<button data-trap-prev>‹ Prev</button><button data-trap-next>Next ›</button><button data-trap-exit>Exit demo</button></span></div>`;
+  }
+  if(!state.trapView && cls.kind==='free' && display && display.mode==='play'){
+    const match = findTrapMatchForPosition(display.pos, opening);
+    if(match){
+      const stageText = match.stage==='justFellIn'
+        ? `this is the exact move that loses in that line`
+        : (match.stage==='aftermath' ? `this is a position from just after the losing move in that line` : `this is a position along the approach to that trap`);
+      html += `<div class="transpo-note" style="margin-bottom:10px">⇄ <b>Heads up.</b> Despite going off-book, this exact position matches a step in <b>${escapeHtml(match.trap.name)}</b> below — ${escapeHtml(stageText)}. Worth reading the full card.</div>`;
+    }
+  }
+  opening.traps.forEach((trap,ti)=>{
+    html += `<div class="trap-card"><h3>⚠ ${escapeHtml(trap.name)}</h3><div class="result">${escapeHtml(trap.result)}</div><p>${escapeHtml(trap.explain)}</p>`;
+    html += `<div class="trapbtns"><button class="btn trapchip" data-watch="${ti}">▶ Watch the demo</button><button class="btn ghost" data-tryit="${ti}">Try it yourself</button></div></div>`;
+  });
+  return html;
+}
+
+/* ---------------------------- events ---------------------------- */
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; render();
+});
+document.getElementById('btnBack').addEventListener('click', ()=>{
+  if(state.trapView){ state.trapView=null; } else { state.sanHistory.pop(); }
+  state.selected=null; state.legalTargets=null; render();
+});
+document.getElementById('btnFlip').addEventListener('click', ()=>{ state.flipped=!state.flipped; render(); });
+document.getElementById('btnBookMove').addEventListener('click', ()=>{
+  const opening=OPENINGS[state.openingId]; const nextIndex=state.sanHistory.length;
+  if(!state.trapView && nextIndex<opening.mainLine.length){ playSanOnHistory(opening.mainLine[nextIndex].san); render(); }
+});
+
+document.addEventListener('click', (e)=>{
+  const sqBtn = e.target.closest('.sq');
+  if(sqBtn && !state.trapView){ onSquareClick(+sqBtn.dataset.idx); return; }
+
+  const openingTabBtn = e.target.closest('[data-opening]');
+  if(openingTabBtn){ switchOpening(openingTabBtn.getAttribute('data-opening')); return; }
+
+  const ttab = e.target.closest('.ttab');
+  if(ttab){ state.activeTutorTab = ttab.dataset.panel; render(); return; }
+
+  const jumpBtn = e.target.closest('[data-jump]');
+  if(jumpBtn){ const idx=+jumpBtn.getAttribute('data-jump'); state.sanHistory=state.sanHistory.slice(0, idx+1); state.trapView=null; state.selected=null; state.legalTargets=null; render(); return; }
+
+  const playBtn = e.target.closest('[data-play]');
+  if(playBtn){ playSanOnHistory(playBtn.getAttribute('data-play')); render(); return; }
+
+  const switchBtn = e.target.closest('[data-switch]');
+  if(switchBtn){ switchOpening(switchBtn.getAttribute('data-switch')); return; }
+
+  const watchBtn = e.target.closest('[data-watch]');
+  if(watchBtn){ startTrapView(+watchBtn.getAttribute('data-watch')); return; }
+
+  const tryBtn = e.target.closest('[data-tryit]');
+  if(tryBtn){ tryTrapYourself(+tryBtn.getAttribute('data-tryit')); return; }
+
+  if(e.target.closest('[data-trap-prev]') && state.trapView){ state.trapView.index=Math.max(0,state.trapView.index-1); render(); return; }
+  if(e.target.closest('[data-trap-next]') && state.trapView){ state.trapView.index=Math.min(state.trapView.trap.moves.length,state.trapView.index+1); render(); return; }
+  if(e.target.closest('[data-trap-exit]')){ state.trapView=null; render(); return; }
+});
+
+render();
+</script>
+
+<script>
+/* =========================================================================
+   HOME-SCREEN INSTALL
+   This page is published inside a wrapper that provides its own <head>, so
+   the icon and theme tags belonging to the app land in the body — they get
+   relocated into <head> here. The manifest is assembled at runtime rather
+   than written inline because a data: manifest carries no base URL of its
+   own: start_url and scope must be absolute, and only the running page
+   knows its own address.
+   All of it is best-effort. A browser that declines the data: manifest still
+   sees the icon links below, which is what a manual "Add to Home Screen"
+   falls back to for the shortcut's icon.
+   ========================================================================= */
+(function(){
+  'use strict';
+
+  var ICON_192 = 'data:image/png;base64,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';
+  var ICON_512 = 'data:image/png;base64,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';
+  var ICON_MASK = 'data:image/png;base64,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';
+  var ICON_APPLE = 'data:image/png;base64,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';
+
+  // Move the app's own meta tags out of the body and into the document head.
+  try{
+    var strays = document.querySelectorAll('[data-pwa]');
+    for(var i=0;i<strays.length;i++) document.head.appendChild(strays[i]);
+  }catch(e){}
+
+  // Icon links, from the same constants the manifest uses.
+  try{
+    [['apple-touch-icon', ICON_APPLE, null],
+     ['icon', ICON_192, '192x192'],
+     ['icon', ICON_512, '512x512']].forEach(function(spec){
+      var l = document.createElement('link');
+      l.rel = spec[0]; l.href = spec[1];
+      if(spec[2]){ l.type = 'image/png'; l.setAttribute('sizes', spec[2]); }
+      document.head.appendChild(l);
+    });
+  }catch(e){}
+
+  try{
+    var base = location.href.split('#')[0];
+    var manifest = {
+      id: base,
+      name: 'Three Answers to c4',
+      short_name: 'Three Answers',
+      description: "Move-by-move Queen's Gambit trainer — the Declined, Slav and Accepted, with engine-backed analysis of off-book moves.",
+      start_url: base,
+      scope: base.replace(/[^/]*$/, ''),
+      display: 'standalone',
+      orientation: 'any',
+      background_color: '#E8E1C8',
+      theme_color: '#E8E1C8',
+      icons: [
+        {src: ICON_192,  sizes:'192x192', type:'image/png', purpose:'any'},
+        {src: ICON_512,  sizes:'512x512', type:'image/png', purpose:'any'},
+        {src: ICON_MASK, sizes:'512x512', type:'image/png', purpose:'maskable'}
+      ]
+    };
+    var mlink = document.createElement('link');
+    mlink.rel = 'manifest';
+    mlink.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+    document.head.appendChild(mlink);
+  }catch(e){}
+
+  var bar  = document.getElementById('installBar');
+  var btn  = document.getElementById('btnInstall');
+  var xBtn = document.getElementById('btnInstallDismiss');
+  var tEl  = document.getElementById('installTitle');
+  var hEl  = document.getElementById('installHint');
+  if(!bar || !btn) return;
+
+  // Running inside the Android app wrapper? Then this page already IS the app —
+  // "; wv)" marks an Android WebView, and the wrapper also passes ?native=1.
+  try{
+    if(/;\s*wv\)/.test(navigator.userAgent || '') || /[?&]native=1(?:&|$)/.test(location.search)) return;
+  }catch(e){}
+
+  // Already launched from the home screen? Then there's nothing to offer.
+  var installed = false;
+  try{
+    installed = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+             || navigator.standalone === true;
+  }catch(e){}
+  if(installed) return;
+
+  var dismissed = false;
+  xBtn.addEventListener('click', function(){ dismissed = true; bar.hidden = true; });
+
+  // Path A — the browser offers a real install prompt (Chrome on Android).
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferred = e;
+    if(dismissed) return;
+    tEl.textContent = 'Install this trainer';
+    hEl.textContent = 'Puts it on your home screen with its own icon, opening full-screen without the browser bar.';
+    btn.hidden = false;
+    bar.hidden = false;
+  });
+
+  btn.addEventListener('click', function(){
+    if(!deferred) return;
+    btn.disabled = true;
+    deferred.prompt();
+    deferred.userChoice.then(function(choice){
+      deferred = null;
+      // Declining is an answer — don't follow it with a nag about doing it by hand.
+      bar.hidden = true;
+      if(!choice || choice.outcome !== 'accepted') dismissed = true;
+    }).catch(function(){ btn.disabled = false; });
+  });
+
+  window.addEventListener('appinstalled', function(){ bar.hidden = true; });
+
+  // Path B — no install event (iOS Safari, or the criteria aren't met):
+  // say how to do it by hand instead.
+  setTimeout(function(){
+    if(deferred || !bar.hidden || dismissed) return;
+    var ua = navigator.userAgent || '';
+    if(!/Android|iPad|iPhone|iPod/.test(ua)) return;   // on desktop this is just noise
+    var isIOS = /iPad|iPhone|iPod/.test(ua);
+    tEl.textContent = 'Add to your home screen';
+    hEl.textContent = isIOS
+      ? 'Tap the Share button, then "Add to Home Screen" — it gets its own icon and opens full-screen.'
+      : 'Open your browser menu (⋮), then "Add to Home screen" — it gets its own icon and opens full-screen.';
+    btn.hidden = true;
+    bar.hidden = false;
+  }, 2000);
+})();
+</script>

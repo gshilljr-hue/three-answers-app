@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Kept short so it isn't truncated under the launcher icon. -->
+    <string name="app_name">Three Answers</string>
+</resources>

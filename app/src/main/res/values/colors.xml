@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matched to the page's own palette so the status bar and the window behind
+         the WebView don't flash a different colour on launch. -->
+    <color name="paper">#E8E1C8</color>
+    <color name="paper_night">#171310</color>
+    <color name="ic_launcher_background">#4A2E19</color>
+</resources>

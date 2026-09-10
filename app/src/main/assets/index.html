@@ -1,13 +1,13 @@
 <meta charset="utf-8">
-<title>Three Answers to c4</title>
+<title>Queen's Gambit Trainer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#E8E1C8" media="(prefers-color-scheme: light)" data-pwa>
 <meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" data-pwa>
 <meta name="mobile-web-app-capable" content="yes" data-pwa>
 <meta name="apple-mobile-web-app-capable" content="yes" data-pwa>
 <meta name="apple-mobile-web-app-status-bar-style" content="default" data-pwa>
-<meta name="apple-mobile-web-app-title" content="Three Answers" data-pwa>
-<meta name="application-name" content="Three Answers" data-pwa>
+<meta name="apple-mobile-web-app-title" content="QG Trainer" data-pwa>
+<meta name="application-name" content="Queen's Gambit Trainer" data-pwa>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -227,6 +227,8 @@
   .banner b{ color:var(--garnet); }
   .banner.ok{ border-color:var(--moss); background:var(--moss-tint); }
   .banner.ok b{ color:var(--moss); }
+  .banner.swap{ border-color:var(--brass); background:var(--brass-tint); }
+  .banner.swap b{ color:var(--brass-strong); }
 
   /* ---------- tutor column ---------- */
   .tutor-column{ display:flex; flex-direction:column; gap:0; min-width:0; }
@@ -407,7 +409,7 @@
   <header class="topbar">
     <div class="brand">
       <span class="eyebrow mono">1.d4 d5 2.c4 — an opening study</span>
-      <h1>Three Answers to <span class="accent">c4</span></h1>
+      <h1>Queen's <span class="accent">Gambit</span> Trainer</h1>
     </div>
     <nav class="opening-tabs" id="openingTabs"></nav>
   </header>
@@ -877,8 +879,8 @@ const OPENINGS = {
         alts:[
           {san:'c6', note:"The Slav Defense — supports d5 with a pawn instead of a piece, keeping c8 free so the bishop can get out to f5 or g4 before e6 blocks it in.", linksTo:'slav'},
           {san:'dxc4', note:"The Queen's Gambit Accepted — grabs the pawn at once and meets White's space with active piece play.", linksTo:'qga'},
-          {san:'Nc6', note:"The Chigorin Defense — active and provocative, but blocks the c-pawn and gives up the fight for d5."},
-          {san:'e5', note:"The Albin Countergambit — a sharp piece sacrifice for fast development. Objectively fine for White with accurate play, but full of traps if White isn't ready for it."}
+          {san:'Nc6', note:"The Chigorin Defense — active and provocative, but blocks the c-pawn and gives up the fight for d5.", linksTo:'chigorin'},
+          {san:'e5', note:"The Albin Counter-Gambit — a sharp pawn sacrifice for fast development. Objectively fine for White with accurate play, but full of traps if White isn't ready for it.", linksTo:'albin'}
         ]},
       {san:'Nc3', explain:"Develops naturally and adds a third attacker on d5, preparing Bg5 to pin whichever knight lands on f6.",
         alts:[{san:'Nf3', note:"A flexible move order that avoids the Ragozin (...Bb4) ideas and delays committing the queenside knight."},{san:'cxd5', note:"Heads straight into the Exchange Variation — trading immediately and playing for a minority attack (b4-b5) against Black's queenside pawns."}]},
@@ -1094,7 +1096,8 @@ const state = {
   legalTargets:null,
   activeTutorTab:'explain',
   trapView:null, /* {trap, index} */
-  promotion:null /* {from, to, options[]} — a pawn is on the last rank awaiting a choice */
+  promotion:null, /* {from, to, options[]} — a pawn is on the last rank awaiting a choice */
+  autoSwitch:null /* set when the board transposed into another repertoire and the tab followed */
 };
 try{ const saved = localStorage.getItem('qgt-opening'); if(saved && OPENINGS[saved]) state.openingId = saved; }catch(e){}
 
@@ -1210,6 +1213,80 @@ function classify(){
   }
 
   return {kind:'free'};
+}
+
+/* =========================================================================
+   CROSS-REPERTOIRE TRANSPOSITION
+   classify() only ever consults the opening whose tab is open. But these five
+   repertoires all begin 1.d4 d5 2.c4 and are separated by a single Black move,
+   so it is entirely normal to be studying one and have the game turn into
+   another. When that happens the position itself is the authority, not the tab
+   you happened to click — so the trainer follows the board and moves the tab to
+   match, rather than reporting a perfectly normal Slav as "off book".
+   ========================================================================= */
+
+/* Does any OTHER repertoire recognise this exact position at this exact ply?
+   Ply has to agree: every downstream feature (the next book move, the
+   alternatives list, trap staging) indexes by how many half-moves have been
+   played, so a match at a different depth would leave all of it pointing at the
+   wrong move. Main lines win over trap lines; OPENING_ORDER breaks any tie. */
+function findCrossOpening(){
+  const n = state.sanHistory.length;
+  if(n === 0) return null;
+  const key = positionKey(replay(state.sanHistory).pos);
+
+  for(const id of OPENING_ORDER){
+    if(id === state.openingId) continue;
+    const o = OPENINGS[id];
+    const mk = getMainKeys(o);
+    if(n < mk.length && mk[n] === key) return {openingId:id, via:'main'};
+  }
+  for(const id of OPENING_ORDER){
+    if(id === state.openingId) continue;
+    const o = OPENINGS[id];
+    for(const trap of o.traps){
+      const tk = getTrapKeys(trap);
+      if(n < tk.length && tk[n] === key) return {openingId:id, via:'trap', trapName:trap.name};
+    }
+  }
+  return null;
+}
+
+/* Follows the board when it leaves the open tab's repertoire. Only runs when the
+   current opening has nothing left to say about the position ('free'), or when
+   it can only describe the move as a sideline ('alt') while another repertoire
+   has it as real theory. During the shared 1.d4 d5 2.c4 opening moves the
+   current opening still matches, so nothing fires. Returns a note, or null. */
+function maybeFollowTransposition(cls){
+  if(state.trapView) return null;
+  if(cls.kind !== 'free' && cls.kind !== 'alt') return null;
+
+  const hit = findCrossOpening();
+  if(!hit || hit.openingId === state.openingId) return null;
+
+  const from = OPENINGS[state.openingId];
+  const to = OPENINGS[hit.openingId];
+
+  state.openingId = hit.openingId;
+  try{ localStorage.setItem('qgt-opening', hit.openingId); }catch(e){}
+
+  // Remembered against the ply it happened at, so the notice shows at the moment
+  // of the switch and clears itself as soon as play moves on.
+  state.autoSwitch = {
+    fromName: from.fullName,
+    toName: to.fullName,
+    via: hit.via,
+    trapName: hit.trapName || null,
+    atPly: state.sanHistory.length
+  };
+  return state.autoSwitch;
+}
+
+/* The notice is only current while the board is still on the transposing move. */
+function activeAutoSwitch(){
+  if(!state.autoSwitch || state.trapView) return null;
+  if(state.autoSwitch.atPly !== state.sanHistory.length) return null;
+  return state.autoSwitch;
 }
 
 /* =========================================================================
@@ -1447,7 +1524,7 @@ function playSanOnHistory(sanStr){
 
 function switchOpening(id){
   if(!OPENINGS[id]) return;
-  state.openingId=id; state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null;
+  state.openingId=id; state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; state.autoSwitch=null;
   state.activeTutorTab='explain';
   try{ localStorage.setItem('qgt-opening', id); }catch(e){}
   render();
@@ -1455,14 +1532,14 @@ function switchOpening(id){
 function startTrapView(ti){
   const opening=OPENINGS[state.openingId];
   const trap=opening.traps[ti]; if(!trap) return;
-  state.trapView={trap, index:0}; state.activeTutorTab='traps'; state.selected=null; state.legalTargets=null; state.promotion=null;
+  state.trapView={trap, index:0}; state.activeTutorTab='traps'; state.selected=null; state.legalTargets=null; state.promotion=null; state.autoSwitch=null;
   render();
 }
 function tryTrapYourself(ti){
   const opening=OPENINGS[state.openingId];
   const trap=opening.traps[ti]; if(!trap) return;
   state.sanHistory = trap.moves.slice(0, trap.losingIndex);
-  state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; state.activeTutorTab='explain';
+  state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; state.autoSwitch=null; state.activeTutorTab='explain';
   render();
 }
 
@@ -1500,7 +1577,7 @@ function playMoveObject(pos, move){
   const legalAll=pos.legalMoves();
   const sanActual=pos.san(move, legalAll);
   state.sanHistory.push(sanActual);
-  state.selected=null; state.legalTargets=null; state.promotion=null;
+  state.selected=null; state.legalTargets=null; state.promotion=null; state.autoSwitch=null;
   render();
 }
 
@@ -1522,14 +1599,18 @@ function choosePromotion(pieceLetter){
   if(!state.promotion) return;
   const pos = replay(state.sanHistory).pos;
   const move = state.promotion.options.find(m=>m.promotion===pieceLetter);
-  if(!move){ state.promotion=null; render(); return; }
+  if(!move){ state.promotion=null; state.autoSwitch=null; render(); return; }
   playMoveObject(pos, move);
 }
 
 /* ---------------------------- rendering ---------------------------- */
 function render(){
+  // Follow the board across repertoires before anything is drawn, then classify
+  // again so the rest of the render sees the opening the position actually is.
+  let cls = classify();
+  if(maybeFollowTransposition(cls)) cls = classify();
+
   const opening = OPENINGS[state.openingId];
-  const cls = classify();
   const display = getDisplayData();
   const freeAssessment = (cls.kind==='free' && display.mode==='play') ? assessFreeMove(display, opening) : null;
 
@@ -1687,6 +1768,16 @@ function renderBanner(opening, cls, display, freeAssessment){
     el.innerHTML = `<b>⚠ ${escapeHtml(cls.trap.name)}!</b> That's the tempting move that loses — see the full explanation in the Explain tab below.`;
     return;
   }
+  // The tab changing under you needs saying out loud, or it just looks like a glitch.
+  const swap = activeAutoSwitch();
+  if(swap){
+    el.hidden=false; el.className='banner swap';
+    el.innerHTML = `<b>⇄ That's a transposition.</b> The game left the ${escapeHtml(swap.fromName)} and became the `
+      + `<b>${escapeHtml(swap.toName)}</b>, so the trainer has switched tabs to follow it`
+      + (swap.via==='trap' && swap.trapName ? ` — and this position sits on the <b>${escapeHtml(swap.trapName)}</b> line` : '')
+      + `. Your moves are all still here.`;
+    return;
+  }
   if(!state.trapView && cls.kind==='free' && freeAssessment && freeAssessment.tone==='bad'){
     el.hidden=false; el.className='banner';
     const moverName = freeAssessment.forWhite ? 'White' : 'Black';
@@ -1722,6 +1813,14 @@ function buildExplainHTML(opening, cls, display, freeAssessment){
   let html = `<div class="tag-intro">${escapeHtml(opening.tagline)}</div>`;
   const playedCount = display.sanList.length;
   html += `<div class="step-count">${playedCount} half-move${playedCount===1?'':'s'} played · this trainer's book runs ${opening.mainLine.length} half-moves deep</div>`;
+
+  const swapNote = activeAutoSwitch();
+  if(swapNote){
+    html += `<p class="transpo-note">⇄ <b>Transposed into the ${escapeHtml(swapNote.toName)}.</b> `
+      + `You reached this position from the ${escapeHtml(swapNote.fromName)}, but it is a book position in the `
+      + `${escapeHtml(swapNote.toName)} — the trainer matched it by position rather than by move order and moved the tab across. `
+      + `Everything below is that repertoire's own theory for this exact position.</p>`;
+  }
 
   if(cls.kind==='startpos'){
     html += `<h2>Starting position</h2><p>Make the first move on the board yourself, or open the <b>Moves</b> tab to see the recommended move and play it with one tap.</p>`;
@@ -2111,11 +2210,11 @@ function buildTrapsHTML(opening, cls, display){
 
 /* ---------------------------- events ---------------------------- */
 document.getElementById('btnReset').addEventListener('click', ()=>{
-  state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; render();
+  state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; state.autoSwitch=null; render();
 });
 document.getElementById('btnBack').addEventListener('click', ()=>{
   if(state.trapView){ state.trapView=null; } else { state.sanHistory.pop(); }
-  state.selected=null; state.legalTargets=null; state.promotion=null; render();
+  state.selected=null; state.legalTargets=null; state.promotion=null; state.autoSwitch=null; render();
 });
 document.getElementById('btnFlip').addEventListener('click', ()=>{ state.flipped=!state.flipped; render(); });
 document.getElementById('btnBookMove').addEventListener('click', ()=>{
@@ -2134,7 +2233,7 @@ document.addEventListener('click', (e)=>{
   if(ttab){ state.activeTutorTab = ttab.dataset.panel; render(); return; }
 
   const jumpBtn = e.target.closest('[data-jump]');
-  if(jumpBtn){ const idx=+jumpBtn.getAttribute('data-jump'); state.sanHistory=state.sanHistory.slice(0, idx+1); state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; render(); return; }
+  if(jumpBtn){ const idx=+jumpBtn.getAttribute('data-jump'); state.sanHistory=state.sanHistory.slice(0, idx+1); state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; state.autoSwitch=null; render(); return; }
 
   const playBtn = e.target.closest('[data-play]');
   if(playBtn){ playSanOnHistory(playBtn.getAttribute('data-play')); render(); return; }
@@ -2155,7 +2254,7 @@ document.addEventListener('click', (e)=>{
   const promoBtn = e.target.closest('[data-promote]');
   if(promoBtn){ choosePromotion(promoBtn.getAttribute('data-promote')); return; }
   if(e.target.closest('[data-promote-cancel]')){
-    state.promotion=null; state.selected=null; state.legalTargets=null; render(); return;
+    state.promotion=null; state.autoSwitch=null; state.selected=null; state.legalTargets=null; render(); return;
   }
 });
 
@@ -2205,8 +2304,8 @@ render();
     var base = location.href.split('#')[0];
     var manifest = {
       id: base,
-      name: 'Three Answers to c4',
-      short_name: 'Three Answers',
+      name: "Queen's Gambit Trainer",
+      short_name: 'QG Trainer',
       description: "Move-by-move Queen's Gambit trainer — the Declined, Slav and Accepted, with engine-backed analysis of off-book moves.",
       start_url: base,
       scope: base.replace(/[^/]*$/, ''),

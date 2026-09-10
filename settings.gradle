@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Three Answers"
+rootProject.name = "Queens Gambit Trainer"
 include ':app'

@@ -135,7 +135,9 @@
   }
 
   /* ---------- board column ---------- */
-  .board-column{ display:flex; flex-direction:column; gap:12px; }
+  /* min-width:0 lets these grid/flex tracks shrink to the viewport; without it the
+     move-history ribbon's content sets the floor and the whole page scrolls sideways. */
+  .board-column{ display:flex; flex-direction:column; gap:12px; min-width:0; }
   .blurb{ padding:14px 16px; }
   .blurb h2{ font-size:1.15rem; font-weight:600; margin-bottom:4px; }
   .blurb p{ margin:0; color:var(--ink-soft); font-size:.94rem; line-height:1.5; }
@@ -194,7 +196,7 @@
   :root[data-theme="dark"] svg.piece.white use, @media (prefers-color-scheme:dark){ svg.piece.white use{ fill:#F4EEDD; stroke:#0E0A06; } }
 
   .history-ribbon{
-    display:flex; gap:6px; overflow-x:auto; padding:8px 4px; scrollbar-width:thin;
+    display:flex; gap:6px; overflow-x:auto; padding:8px 4px; scrollbar-width:thin; min-width:0;
   }
   .history-ribbon .num{ font-family:"JetBrains Mono",monospace; color:var(--ink-faint); font-size:.8rem; align-self:center; padding-right:2px; flex:none; }
   .history-ribbon button{
@@ -227,7 +229,7 @@
   .banner.ok b{ color:var(--moss); }
 
   /* ---------- tutor column ---------- */
-  .tutor-column{ display:flex; flex-direction:column; gap:0; }
+  .tutor-column{ display:flex; flex-direction:column; gap:0; min-width:0; }
   .ttabs{ display:flex; gap:4px; padding:4px; background:var(--paper-2); border-radius:var(--radius) var(--radius) 0 0; }
   .ttab{
     flex:1; appearance:none; border:none; background:transparent; color:var(--ink-soft);
@@ -275,6 +277,70 @@
   }
   .trapview-bar .steps{ display:flex; gap:6px; }
   .trapview-bar button{ appearance:none; border:1px solid var(--brass-tint); background:transparent; color:var(--brass-tint); padding:5px 10px; border-radius:6px; cursor:pointer; font-weight:600; }
+
+  /* ---- Plans tab ---- */
+  .struct{
+    border:1.5px solid var(--brass); background:var(--brass-tint);
+    border-radius:10px; padding:12px 14px;
+  }
+  .struct h3{ color:var(--brass-strong); font-size:1.02rem; margin-bottom:4px; }
+  .struct-arises{ font-size:.88rem; color:var(--ink-soft); margin:0 0 10px !important; }
+  .struct-plans{ display:grid; gap:9px; grid-template-columns:1fr; }
+  @media (min-width:620px){ .struct-plans{ grid-template-columns:1fr 1fr; } }
+  .sp{ background:var(--paper); border-radius:8px; padding:9px 11px; border-left:3px solid; }
+  .sp p{ margin:0 !important; font-size:.89rem; }
+  .sp-t{
+    display:block; font-family:"JetBrains Mono",monospace; font-size:.68rem; font-weight:600;
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px;
+  }
+  .sp-w{ border-left-color:var(--moss); }
+  .sp-w .sp-t{ color:var(--moss); }
+  .sp-b{ border-left-color:var(--walnut); }
+  .sp-b .sp-t{ color:var(--walnut); }
+  .struct-note{ font-size:.85rem; font-style:italic; color:var(--ink-soft); margin:10px 0 0 !important; }
+
+  .plan-list{ margin:.2rem 0 0; padding-left:1.1rem; }
+  .plan-list li{ margin:.35rem 0; color:var(--ink-soft); font-size:.93rem; line-height:1.55; }
+
+  .squares{ display:grid; gap:7px; }
+  .squares > div{ display:flex; gap:10px; align-items:baseline; font-size:.9rem; color:var(--ink-soft); }
+  .sq-n{
+    flex:none; min-width:3.6rem; font-weight:600; font-size:.82rem;
+    background:var(--paper-2); color:var(--brass-strong);
+    border-radius:5px; padding:2px 7px; text-align:center;
+  }
+
+  .fix-list{ display:grid; gap:8px; }
+  .fix-item{ font-size:.91rem; color:var(--ink-soft); line-height:1.55; }
+  .fix-item b{ color:var(--ink); }
+
+  .games{ display:grid; gap:7px; }
+  .game{
+    display:grid; gap:1px; padding:8px 11px; border-radius:7px;
+    background:var(--paper); border:1px solid var(--paper-2); font-size:.9rem;
+  }
+  .game b{ color:var(--ink); }
+  .g-meta{ font-size:.74rem; color:var(--ink-faint); }
+  .g-why{ font-size:.86rem; color:var(--ink-soft); }
+
+  .promo-bar{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin:0 2px; padding:9px 12px; border-radius:9px;
+    border:1.5px solid var(--brass); background:var(--brass-tint); color:var(--ink);
+  }
+  .promo-label{ font-size:.87rem; font-weight:600; color:var(--brass-strong); }
+  .promo-picks{ display:flex; gap:6px; }
+  .promo-pick{
+    appearance:none; cursor:pointer; width:40px; height:40px; line-height:1;
+    font-size:1.5rem; border-radius:8px;
+    border:1.5px solid var(--walnut); background:var(--paper); color:var(--ink);
+  }
+  .promo-pick:hover{ background:var(--walnut); color:var(--brass-tint); }
+  .promo-cancel{
+    margin-left:auto; appearance:none; border:none; background:none; cursor:pointer;
+    color:var(--ink-faint); font-size:1.3rem; line-height:1; padding:2px 4px;
+  }
+  .promo-cancel:hover{ color:var(--ink); }
 
   .install-bar{
     display:flex; align-items:center; gap:12px; flex-wrap:wrap;
@@ -367,6 +433,17 @@
 
       <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="Chess board"></div></div>
 
+      <div class="promo-bar" id="promoBar" hidden>
+        <span class="promo-label">Promote to</span>
+        <span class="promo-picks">
+          <button class="promo-pick" data-promote="Q" aria-label="Promote to queen">♛</button>
+          <button class="promo-pick" data-promote="R" aria-label="Promote to rook">♜</button>
+          <button class="promo-pick" data-promote="B" aria-label="Promote to bishop">♝</button>
+          <button class="promo-pick" data-promote="N" aria-label="Promote to knight">♞</button>
+        </span>
+        <button class="promo-cancel" data-promote-cancel aria-label="Cancel">×</button>
+      </div>
+
       <div class="card history-ribbon" id="historyRibbon"></div>
 
       <div class="controls">
@@ -385,19 +462,21 @@
     <section class="tutor-column card">
       <div class="ttabs">
         <button class="ttab active" data-panel="explain">Explain</button>
-        <button class="ttab" data-panel="alts">Alternatives</button>
-        <button class="ttab" data-panel="traps">Traps &amp; pitfalls</button>
+        <button class="ttab" data-panel="alts">Moves</button>
+        <button class="ttab" data-panel="plans">Plans</button>
+        <button class="ttab" data-panel="traps">Traps</button>
       </div>
       <div class="tpanels">
         <div class="tpanel active" id="panel-explain"></div>
         <div class="tpanel" id="panel-alts"></div>
+        <div class="tpanel" id="panel-plans"></div>
         <div class="tpanel" id="panel-traps"></div>
       </div>
     </section>
   </main>
 
   <footer class="foot">
-    Covers the classical main lines of the Queen's Gambit Declined, Slav Defense and Queen's Gambit Accepted.<br>
+    Covers the classical main lines of the Queen's Gambit Declined, Slav Defense and Queen's Gambit Accepted, plus White's answers to the Albin Counter-Gambit and the Chigorin Defense — with the pawn structure you're in, and the plan that goes with it, in the Plans tab.<br>
     Off-book moves are checked by a real search engine built into this page (alpha-beta pruning, capture quiescence, a few plies of look-ahead) — not a full-strength engine, and not a substitute for one, but genuine multi-ply analysis rather than a one-move scan. The scripted content (main lines, alternatives, traps) is still a White repertoire, but off-book analysis is symmetric: whichever side plays an unscripted move gets the same graded verdict and the same plain-language read of what the move is going for, and the Alternatives and Traps tabs stay useful off-book too — showing the engine's own top picks, and flagging it if an off-book path happens to transpose into a known trap position.
   </footer>
 </div>
@@ -501,16 +580,24 @@ const ChessEngine = (function(){
       const t=type(p); const f=fileOf(i), r=rankOf(i);
       if(t==='P'){
         const dir = side===WHITE?1:-1; const startRank = side===WHITE?1:6; const lastRank = side===WHITE?7:0;
+        // All four promotion pieces, not just the queen. Underpromotion decides real
+        // lines: the Lasker Trap in the Albin is won by ...fxg1=N+, and queening
+        // there throws the whole point away.
+        const PROMO = ['Q','R','B','N'];
         const one = sq(f, r+dir);
         if(r+dir>=0 && r+dir<8 && !this.board[one]){
-          moves.push({from:i,to:one,piece:t,promotion:(rankOf(one)===lastRank)?'Q':null});
+          if(rankOf(one)===lastRank){ for(const pr of PROMO) moves.push({from:i,to:one,piece:t,promotion:pr}); }
+          else moves.push({from:i,to:one,piece:t,promotion:null});
           const two = sq(f, r+2*dir);
           if(r===startRank && !this.board[two]) moves.push({from:i,to:two,piece:t,double:true});
         }
         for(const df of [-1,1]){
           const cf=f+df, cr=r+dir; if(cf<0||cf>7||cr<0||cr>7) continue;
           const to=sq(cf,cr); const target=this.board[to];
-          if(target && color(target)!==side) moves.push({from:i,to,piece:t,capture:true,promotion:(rankOf(to)===lastRank)?'Q':null});
+          if(target && color(target)!==side){
+            if(rankOf(to)===lastRank){ for(const pr of PROMO) moves.push({from:i,to,piece:t,capture:true,promotion:pr}); }
+            else moves.push({from:i,to,piece:t,capture:true,promotion:null});
+          }
           else if(this.ep!=null && to===this.ep) moves.push({from:i,to,piece:t,capture:true,ep:true});
         }
       } else if(t==='N'){
@@ -557,7 +644,7 @@ const ChessEngine = (function(){
     const side=this.turn; const piece=this.board[m.from];
     this.board[m.from]=null;
     if(m.ep){ const capSq = sq(fileOf(m.to), rankOf(m.from)); this.board[capSq]=null; }
-    this.board[m.to] = m.promotion ? (side===WHITE?'Q':'q') : piece;
+    this.board[m.to] = m.promotion ? (side===WHITE ? m.promotion : m.promotion.toLowerCase()) : piece;
     if(m.castle){
       const rank0 = side===WHITE?0:7;
       if(m.castle==='K'){ this.board[sq(5,rank0)] = this.board[sq(7,rank0)]; this.board[sq(7,rank0)]=null; }
@@ -904,6 +991,91 @@ const OPENINGS = {
         explain:"Trying to hang on to the extra pawn with an early ...b5 is tempting but dangerous: it spends three or four tempi on pawn moves while badly neglecting development, and it opens the long a8-h1 diagonal right in front of Black's own undefended rook. After 6.Qf3! the queen lands on that empty diagonal — b7 and c6 have both been vacated by Black's own pawn moves — and attacks the a8-rook directly, with no way to defend it and finish development at the same time. The lesson generalises well beyond this exact line: don't spend the opening grabbing and holding a single extra pawn while your king is still in the centre and your pieces are still at home. Development comes first."
       }
     ]
+  },
+
+  albin: {
+    id:'albin', name:'Albin', shortName:'Albin', fullName:'Albin Counter-Gambit',
+    tagline:"Black answers 2.c4 by throwing a second pawn into the centre with 2...e5. White should take it — but the natural-looking follow-up walks into one of the most beautiful traps in all of chess, so this line is worth knowing precisely rather than approximately.",
+    mainLine:[
+      {san:'d4', explain:"Claims the centre and opens the c1-bishop's diagonal."},
+      {san:'d5', explain:"The classical central reply."},
+      {san:'c4', explain:"The Queen's Gambit."},
+      {san:'e5', explain:"The Albin Counter-Gambit. Instead of defending d5, Black attacks: the e5-pawn hits d4, and if White ever takes on d5 the reply ...exd4 leaves Black with a strong central pawn. It's objectively a little dubious, but it is sharp, and an unprepared White player can be in real trouble inside six moves.",
+        alts:[
+          {san:'e6', note:"The Queen's Gambit Declined instead — solid and classical.", linksTo:'qgd'},
+          {san:'c6', note:"The Slav Defense instead.", linksTo:'slav'},
+          {san:'dxc4', note:"The Queen's Gambit Accepted instead.", linksTo:'qga'},
+          {san:'Nc6', note:"The Chigorin Defense — also active, also slightly offbeat.", linksTo:'chigorin'}
+        ]},
+      {san:'dxe5', explain:"Accept. Declining lets Black dictate the game for free, and the pawn on e5 is genuinely useful — it cramps Black's kingside and gives White something concrete to hold on to.",
+        alts:[{san:'e3', note:"Solid but unambitious — it hands Black an easy game after ...exd4, since White has spent a move on a pawn that now just recaptures."},{san:'cxd5', note:"Playable, but ...exd4 gives Black exactly the strong central pawn the whole gambit is designed to produce."}]},
+      {san:'d4', explain:"The point of the gambit. The pawn is passed, it's annoyingly far advanced, and — most importantly — it takes the c3-square away from White's queen's knight, which is where that piece most wants to go."},
+      {san:'Nf3', explain:"The critical move, and the one to memorise. It develops, defends the e5-pawn, and quietly sidesteps the whole disaster. The alternative 4.e3, which looks like the most natural move on the board, loses on the spot — see the Traps tab before you ever play this line.",
+        alts:[
+          {san:'e3', note:"⚠ The losing move. It looks like simple development, undermining d4 — but it walks straight into the Lasker Trap. Open the Traps tab and play through it once; you'll never play e3 here again."},
+          {san:'a3', note:"A quiet modern try, taking b4 away from Black's bishop before doing anything else. Prophylaxis rather than development."},
+          {san:'g3', note:"Also fine — the fianchetto plan below, just in a different move order."}
+        ]},
+      {san:'Nc6', explain:"Black develops, adds a second attacker to e5 and supports the d4-pawn from behind."},
+      {san:'g3', explain:"The modern main line. White fianchettoes to fight for the light squares around Black's advanced pawn, rather than trying to win the d4-pawn by force — it's usually easier to blockade it and let it become weak than to capture it immediately.",
+        alts:[{san:'a3', note:"Stopping ...Bb4 first, keeping the option of Nbd2 and b4 later."},{san:'Nbd2', note:"Heading straight for b3 to press the d4-pawn; sound, but it lets Black play ...Bg4 with a comfortable pin."}]},
+      {san:'Bg4', explain:"Black pins the f3-knight against the queen — the knight is the main defender of e5, so this is the natural way to keep the pressure on."},
+      {san:'Bg2', explain:"Completes the fianchetto. The bishop eyes the long diagonal and, in many lines, will help support an eventual break with e3."},
+      {san:'Qd7', explain:"Connects Black's rooks and prepares to castle long — Black's king is heading for the queenside, which sets up a sharp race."},
+      {san:'O-O', explain:"White tucks the king away safely on the opposite wing from where Black's is going."},
+      {san:'O-O-O', explain:"Opposite-side castling. Both players now know where to attack: White goes at Black's king on the queenside, Black at White's on the kingside, and whoever gets there first usually wins."},
+      {san:'Nbd2', explain:"Heading for b3, where the knight will hit the d4-pawn and, just as usefully, help launch the queenside pawn storm against Black's king. This is the position White is aiming for out of the whole line."}
+    ],
+    traps:[
+      {
+        name:"The Lasker Trap", result:"Black wins the queen — via a knight promotion.",
+        moves:['d4','d5','c4','e5','dxe5','d4','e3','Bb4+','Bd2','dxe3','Bxb4','exf2+','Ke2','fxg1=N+','Rxg1','Bg4+','Ke1','Bxd1'],
+        losingIndex:10,
+        explain:"This is one of the very few traps in serious chess where the winning move is an underpromotion — and it happens before move eight. White plays the natural 4.e3, trying to dissolve that annoying d4-pawn. After 4...Bb4+ 5.Bd2 dxe3 the position looks messy but survivable, and White's real chance is 6.fxe3, which is playable. Instead 6.Bxb4?? grabs the bishop, and now 6...exf2+ 7.Ke2 arrives at the famous moment. Black's f2-pawn can promote. A new queen on g1 would simply be taken by White's rook — but a KNIGHT on g1 lands with check, because a knight on g1 attacks e2 where the white king is standing. After 7...fxg1=N+! 8.Rxg1 Bg4+ the bishop checks along the g4-e2 diagonal, and here is the sting: White cannot block with the queen, because the only route from d1 to g4 runs through e2 where the king itself sits. So 9.Ke1 Bxd1 and Black is a whole queen up. The lesson is worth more than the line: when you promote, always ask whether a knight would give check, because a knight is the one piece a queen cannot imitate."
+      }
+    ]
+  },
+
+  chigorin: {
+    id:'chigorin', name:'Chigorin', shortName:'Chigorin', fullName:'Chigorin Defense',
+    tagline:"Black meets 2.c4 with 2...Nc6 — pieces before pawns. It deliberately breaks the rule about blocking your own c-pawn, betting that fast, awkward piece pressure is worth more than a tidy structure. White's answer is to take the structural gift seriously and play against it.",
+    mainLine:[
+      {san:'d4', explain:"Claims the centre and opens the c1-bishop's diagonal."},
+      {san:'d5', explain:"The classical central reply."},
+      {san:'c4', explain:"The Queen's Gambit."},
+      {san:'Nc6', explain:"The Chigorin Defense. Black develops a piece rather than supporting d5 with a pawn — which means d5 is defended by a knight that has also just blocked Black's own c-pawn. Black accepts a slightly worse structure in exchange for rapid, irritating activity.",
+        alts:[
+          {san:'e6', note:"The Queen's Gambit Declined instead.", linksTo:'qgd'},
+          {san:'c6', note:"The Slav Defense instead — the sound way to support d5 with a pawn.", linksTo:'slav'},
+          {san:'e5', note:"The Albin Counter-Gambit — the other aggressive answer to 2.c4.", linksTo:'albin'}
+        ]},
+      {san:'Nf3', explain:"Natural development, and a quiet question to the c6-knight: with the c-pawn blocked behind it, how exactly is Black going to hold d5?",
+        alts:[{san:'cxd5', note:"Taking at once is also strong: after ...Qxd5 White gains a tempo with Nc3, since Black has no pawn able to recapture on d5."},{san:'Nc3', note:"Developing first — but it allows ...dxc4 when the c6-knight covers the b5/d5 squares awkwardly for White."}]},
+      {san:'Bg4', explain:"The consistent follow-up. Black pins the knight that defends d4, so the pressure on White's centre is real rather than decorative."},
+      {san:'cxd5', explain:"The critical test, and the whole point of the system. Black cannot recapture with a pawn — the c-pawn is blocked by Black's own knight — so the recapture has to be made with a piece, which White can then chase.",
+        alts:[{san:'e3', note:"⚠ Too slow here. It lets Black play ...e5 with a strong centre and comfortable equality — see the Traps tab."},{san:'Qa4', note:"Pinning the c6-knight in return. Sharp and playable, but it commits the queen early."}]},
+      {san:'Bxf3', explain:"Black gives up the bishop pair to wreck White's kingside structure — the whole Chigorin bet in one move. Without this, ...Qxd5 would simply lose a piece to White's knight."},
+      {san:'gxf3', explain:"Doubled, isolated f-pawns look ugly, and they are a genuine long-term liability. But look at what White got: the bishop pair, an open g-file pointing at Black's king, and a rock-solid pawn on e-file duty defending the centre. Master practice says White's side of this bargain is the better one.",
+        alts:[{san:'exf3', note:"Structurally tidier, but it blocks White's own light-squared bishop and gives up the open g-file — most strong players take with the g-pawn."}]},
+      {san:'Qxd5', explain:"Black regains the pawn. The queen looks active in the centre, but she is also a target."},
+      {san:'e3', explain:"Solid and to the point: it shores up d4 and opens the f1-bishop's diagonal. White is in no hurry — the structural advantage isn't going anywhere."},
+      {san:'e5', explain:"Black hits back in the centre before White can consolidate. This is Black's main source of counterplay in the whole variation."},
+      {san:'Nc3', explain:"Develops with tempo — the knight attacks the queen on d5, so Black must move her and White gains a free move to complete development."},
+      {san:'Bb4', explain:"Black pins the knight straight back, hoping to trade off one of White's bishops and take the sting out of the bishop pair."},
+      {san:'Bd2', explain:"Calmly breaking the pin and inviting the trade on White's terms."},
+      {san:'Bxc3', explain:"Black doubles White's pawns a second time. Two sets of doubled pawns is a real concession to make, and it is the price of removing a defender."},
+      {san:'bxc3', explain:"Recapturing towards the centre. White now has a broad pawn mass on c3-d4-e3 and — crucially — an open b-file aimed at Black's queenside."},
+      {san:'Qd6', explain:"The queen steps out of the way and eyes the a3-f8 diagonal."},
+      {san:'Rb1', explain:"The payoff. White's rook takes the open b-file and presses on b7 immediately. White has two bishops, a big centre and the only open file on the board — this is exactly the sort of position the Chigorin is trying to avoid, and it's why 4.Nf3 and 6.cxd5 are the critical test."}
+    ],
+    traps:[
+      {
+        name:"Too slow with e3", result:"Not a blunder — but Black equalises comfortably.",
+        moves:['d4','d5','c4','Nc6','Nf3','Bg4','e3','e5'],
+        losingIndex:6,
+        explain:"This one costs no material, which is exactly why it catches people out: nothing feels wrong until the advantage has quietly evaporated. Against the Chigorin, White's edge comes from the fact that Black's c-pawn is blocked and so d5 can only ever be recaptured by a piece. The move 4.e3 gives that up. It's a perfectly sensible developing move in most Queen's Gambit positions, but here it lets Black play 4...e5! — and suddenly Black has the big pawn centre, the bishop pair pressure on f3 is still there, and the structural point of White's whole plan has gone. The right move is 4.cxd5, forcing the issue while Black still cannot answer with a pawn. The general principle: when your opponent's setup has one specific weakness, hit it before they get the chance to fix it."
+      }
+    ]
   }
 };
 </script>
@@ -912,7 +1084,7 @@ const OPENINGS = {
 /* =========================================================================
    APP LOGIC
    ========================================================================= */
-const OPENING_ORDER = ['qgd','slav','qga'];
+const OPENING_ORDER = ['qgd','slav','qga','albin','chigorin'];
 
 const state = {
   openingId:'qgd',
@@ -921,7 +1093,8 @@ const state = {
   selected:null,
   legalTargets:null,
   activeTutorTab:'explain',
-  trapView:null /* {trap, index} */
+  trapView:null, /* {trap, index} */
+  promotion:null /* {from, to, options[]} — a pawn is on the last rank awaiting a choice */
 };
 try{ const saved = localStorage.getItem('qgt-opening'); if(saved && OPENINGS[saved]) state.openingId = saved; }catch(e){}
 
@@ -1274,7 +1447,7 @@ function playSanOnHistory(sanStr){
 
 function switchOpening(id){
   if(!OPENINGS[id]) return;
-  state.openingId=id; state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null;
+  state.openingId=id; state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null;
   state.activeTutorTab='explain';
   try{ localStorage.setItem('qgt-opening', id); }catch(e){}
   render();
@@ -1282,14 +1455,14 @@ function switchOpening(id){
 function startTrapView(ti){
   const opening=OPENINGS[state.openingId];
   const trap=opening.traps[ti]; if(!trap) return;
-  state.trapView={trap, index:0}; state.activeTutorTab='traps'; state.selected=null; state.legalTargets=null;
+  state.trapView={trap, index:0}; state.activeTutorTab='traps'; state.selected=null; state.legalTargets=null; state.promotion=null;
   render();
 }
 function tryTrapYourself(ti){
   const opening=OPENINGS[state.openingId];
   const trap=opening.traps[ti]; if(!trap) return;
   state.sanHistory = trap.moves.slice(0, trap.losingIndex);
-  state.trapView=null; state.selected=null; state.legalTargets=null; state.activeTutorTab='explain';
+  state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; state.activeTutorTab='explain';
   render();
 }
 
@@ -1310,13 +1483,47 @@ function onSquareClick(idx){
     const legal=pos.legalMovesFrom(idx);
     state.selected=idx; state.legalTargets=legal; render(); return;
   }
-  const move=(state.legalTargets||[]).find(m=>m.to===idx);
-  if(!move) return;
+  const candidates=(state.legalTargets||[]).filter(m=>m.to===idx);
+  if(!candidates.length) return;
+  // A pawn reaching the last rank gives four legal moves to the same square —
+  // ask which piece rather than silently assuming a queen.
+  if(candidates.length>1 && candidates[0].promotion){
+    state.promotion={from:state.selected, to:idx, options:candidates};
+    render();
+    return;
+  }
+  playMoveObject(pos, candidates[0]);
+}
+
+/* Commits a chosen move object to the game and re-renders. */
+function playMoveObject(pos, move){
   const legalAll=pos.legalMoves();
   const sanActual=pos.san(move, legalAll);
   state.sanHistory.push(sanActual);
-  state.selected=null; state.legalTargets=null;
+  state.selected=null; state.legalTargets=null; state.promotion=null;
   render();
+}
+
+/* Shows the four promotion pieces in the colour of whoever is promoting, so the
+   choice reads as "which piece do I get" rather than an abstract symbol row. */
+function renderPromotionBar(){
+  const el = document.getElementById('promoBar');
+  if(!state.promotion || state.trapView){ el.hidden = true; return; }
+  const moverIsWhite = replay(state.sanHistory).pos.turn===ChessEngine.WHITE;
+  const GLYPH = moverIsWhite ? {Q:'♕',R:'♖',B:'♗',N:'♘'} : {Q:'♛',R:'♜',B:'♝',N:'♞'};
+  el.querySelectorAll('.promo-pick').forEach(btn=>{
+    const p = btn.getAttribute('data-promote');
+    btn.textContent = GLYPH[p] || '';
+  });
+  el.hidden = false;
+}
+
+function choosePromotion(pieceLetter){
+  if(!state.promotion) return;
+  const pos = replay(state.sanHistory).pos;
+  const move = state.promotion.options.find(m=>m.promotion===pieceLetter);
+  if(!move){ state.promotion=null; render(); return; }
+  playMoveObject(pos, move);
 }
 
 /* ---------------------------- rendering ---------------------------- */
@@ -1330,12 +1537,14 @@ function render(){
   renderBlurb(opening);
   renderStatusLine(opening, cls, display, freeAssessment);
   renderBoardUI(display);
+  renderPromotionBar();
   renderHistoryRibbon(display);
   renderBookButton(opening, cls);
   renderBanner(opening, cls, display, freeAssessment);
   renderTutorTabsUI();
   document.getElementById('panel-explain').innerHTML = buildExplainHTML(opening, cls, display, freeAssessment);
   document.getElementById('panel-alts').innerHTML = buildAltsHTML(opening, cls, display);
+  document.getElementById('panel-plans').innerHTML = buildPlansHTML(opening, cls, display);
   document.getElementById('panel-traps').innerHTML = buildTrapsHTML(opening, cls, display);
 
   document.getElementById('btnBack').disabled = (state.sanHistory.length===0 && !state.trapView);
@@ -1515,7 +1724,7 @@ function buildExplainHTML(opening, cls, display, freeAssessment){
   html += `<div class="step-count">${playedCount} half-move${playedCount===1?'':'s'} played · this trainer's book runs ${opening.mainLine.length} half-moves deep</div>`;
 
   if(cls.kind==='startpos'){
-    html += `<h2>Starting position</h2><p>Make the first move on the board yourself, or open the <b>Alternatives</b> tab to see the recommended move and play it with one tap.</p>`;
+    html += `<h2>Starting position</h2><p>Make the first move on the board yourself, or open the <b>Moves</b> tab to see the recommended move and play it with one tap.</p>`;
   } else if(cls.kind==='main'){
     const playedSan = state.sanHistory[cls.index] || cls.ply.san;
     html += `<h2 class="mono">${escapeHtml(playedSan)}</h2>`;
@@ -1536,7 +1745,7 @@ function buildExplainHTML(opening, cls, display, freeAssessment){
     } else if(cls.stage==='aftermath'){
       html += `<h2 style="color:var(--garnet)">${escapeHtml(cls.trap.name)} — the point continues</h2><p>${escapeHtml(cls.trap.explain)}</p>`;
     } else {
-      html += `<h2>Heading toward a known pitfall</h2><p>This exact position can lead into <b>${escapeHtml(cls.trap.name)}</b> a little further on. Open the <b>Traps &amp; pitfalls</b> tab to see the full point before it happens.</p>`;
+      html += `<h2>Heading toward a known pitfall</h2><p>This exact position can lead into <b>${escapeHtml(cls.trap.name)}</b> a little further on. Open the <b>Traps</b> tab to see the full point before it happens.</p>`;
     }
   } else {
     html += buildFreeMoveHTML(opening, freeAssessment);
@@ -1566,7 +1775,7 @@ function buildFreeMoveHTML(opening, a){
   html += `<p class="mono" style="font-weight:700;font-size:1.02rem;color:${TONE_COLOR[a.tone]}">${escapeHtml(a.label)}</p>`;
 
   if(a.trapMatch){
-    html += `<p>⚠ <b>Heads up</b> — despite going off-book, this exact position matches a step in <b>${escapeHtml(a.trapMatch.trap.name)}</b>. See the <b>Traps &amp; pitfalls</b> tab for the full point.</p>`;
+    html += `<p>⚠ <b>Heads up</b> — despite going off-book, this exact position matches a step in <b>${escapeHtml(a.trapMatch.trap.name)}</b>. See the <b>Traps</b> tab for the full point.</p>`;
   }
 
   html += `<h3>What ${escapeHtml(moverName)} is going for</h3><p>${escapeHtml(a.idea)}</p>`;
@@ -1610,13 +1819,13 @@ function buildAltsHTML(opening, cls, display){
   const nextIndex = state.sanHistory.length;
   const onBook = (cls.kind==='startpos' || cls.kind==='main');
   if(state.trapView){
-    return `<p>Alternatives are shown for the live board, not the trap demo. Tap <b>Exit demo</b> in the Traps tab first.</p>`;
+    return `<p>Move options are shown for the live board, not the trap demo. Tap <b>Exit demo</b> in the Traps tab first.</p>`;
   }
   if(!onBook){
     if(cls.kind==='free' && display && display.mode==='play'){
       return buildEngineAltsHTML(display);
     }
-    return `<p>Alternatives are shown for on-book positions. Use <b>Back</b> or <b>Reset</b> to return to a book position and see the recommended move and its alternatives here.</p>`;
+    return `<p>Move options are shown for on-book positions. Use <b>Back</b> or <b>Reset</b> to return to a book position and see the recommended move and its alternatives here.</p>`;
   }
   if(nextIndex>=opening.mainLine.length){
     return `<p>You've reached the end of the scripted main line — there's no further recommended move to show here. The position is yours to explore.</p>`;
@@ -1660,6 +1869,223 @@ function buildEngineAltsHTML(display){
   return html;
 }
 
+/* =========================================================================
+   PAWN STRUCTURES
+   The structures below are the ones the Queen's Gambit actually produces, and
+   each carries its own plan for both sides — which is why they're worth naming.
+   Detection works off the position itself (how many pawns each side has on each
+   file), not off the move list, so it keeps working after transpositions and
+   after you've wandered off book entirely.
+   ========================================================================= */
+const FILE_A=0, FILE_B=1, FILE_C=2, FILE_D=3, FILE_E=4;
+
+function pawnsByFile(pos, side){
+  const files = new Array(8).fill(0);
+  for(let i=0;i<64;i++){
+    const p = pos.board[i];
+    if(p && ChessEngine.color(p)===side && ChessEngine.type(p)==='P') files[ChessEngine.fileOf(i)]++;
+  }
+  return files;
+}
+function pawnAt(pos, alg, side){
+  const p = pos.board[ChessEngine.fromAlgebraic(alg)];
+  return !!p && ChessEngine.type(p)==='P' && ChessEngine.color(p)===side;
+}
+
+const STRUCTURES = {
+  carlsbad: {
+    name:'The Carlsbad structure',
+    arises:"White's c-pawn and Black's e-pawn have both been traded off — the signature of the QGD Exchange Variation.",
+    white:"The minority attack: push b2-b4-b5 and trade on c6. Two pawns advancing against Black's three sounds backwards, but the point isn't to win material — it's to leave Black with a permanently weak pawn on c6 or an isolated one on d5, then win it in the endgame.",
+    black:"Counterplay in the centre and on the kingside, usually with ...Ne4 or a timely ...f5. Black is racing: if the minority attack lands first, the queenside pawns are a long-term liability.",
+    note:"This is the classic teaching structure of positional chess — Fischer-Spassky 1972 is full of it."
+  },
+  iqpWhite: {
+    name:"White has an isolated queen's pawn",
+    arises:"White's d-pawn has no friendly pawn left on the c- or e-file to support it.",
+    white:"Play fast, not slow. The isolated pawn gives White the e5 and c5 outposts and open lines for both bishops — use them, aim pieces at the kingside, and look for the d4-d5 break to open the position before Black can consolidate.",
+    black:"Blockade the pawn on d5, trade pieces at every opportunity, and target d4. Every exchange makes the isolated pawn weaker, because its only real virtue is the activity it buys.",
+    note:"The rule of thumb: the isolated pawn is a middlegame asset and an endgame liability. Whoever wants the trade tells you who is better."
+  },
+  iqpBlack: {
+    name:"Black has an isolated queen's pawn",
+    arises:"Black's d-pawn is left with no pawn on the c- or e-file to support it.",
+    white:"Blockade the pawn — a knight on d4 is the classic post — then trade pieces and squeeze. The fewer pieces on the board, the weaker that pawn gets.",
+    black:"Use the activity while it lasts: open lines, the e4/c4 outposts, and piece pressure on White's king. Black must not let the game simplify.",
+    note:"Same structure as above with the colours reversed, and the same rule: trades favour whoever isn't holding the isolated pawn."
+  },
+  hangingWhite: {
+    name:'White has hanging pawns',
+    arises:"White holds side-by-side pawns on the c- and d-files with nothing left on the b- or e-files.",
+    white:"They control a lot of central squares — use that space for piece play, and look for the right moment to push one of them (usually d4-d5) to open lines while they're still mobile.",
+    black:"Fix them and attack them. Hanging pawns are strong while they can advance and weak the moment they can't, so Black wants to blockade first and pile up second.",
+    note:"Hanging pawns are dynamic: they're either an asset in motion or a target standing still, and rarely anything in between."
+  },
+  slavTriangle: {
+    name:'The Slav triangle',
+    arises:"Black's pawns sit on c6 and d5 against White's d4 — the solid backbone of the Slav.",
+    white:"Prepare e2-e4. It's the only break that really challenges this structure, and it usually needs preparation with Qc2, Rd1 and Bd3 first. Queenside space with a4 also restricts Black's ...b5 ideas.",
+    black:"Hold the centre and look for ...c5 or ...e5 at the right moment. Getting the light-squared bishop outside the chain before playing ...e6 is the whole reason for choosing the Slav.",
+    note:"Solid rather than passive — this structure has held up at world-championship level for a century."
+  },
+  closedQG: {
+    name:'The classical Queen\'s Gambit centre',
+    arises:"White's pawns on c4 and d4 face Black's on d5 — the central tension is still unresolved.",
+    white:"Keep the tension as long as it helps you. The three ways to break it are cxd5 (heading for the Carlsbad structure), e2-e4 after preparation, or letting Black take on c4 and recapturing with the bishop a tempo up.",
+    black:"Decide when to resolve: ...dxc4 frees the position but concedes the centre, while holding on with ...c6 or ...e6 keeps things solid at the cost of the light-squared bishop's freedom.",
+    note:"Whoever resolves the tension is making a commitment. The player who can wait longest usually gets the better version of it."
+  }
+};
+
+/* Returns a STRUCTURES entry, or null while the centre is still undefined. */
+function detectStructure(pos){
+  const w = pawnsByFile(pos, ChessEngine.WHITE);
+  const b = pawnsByFile(pos, ChessEngine.BLACK);
+
+  // Most specific first: an isolated d-pawn is a stronger statement than anything below it.
+  if(w[FILE_D]>=1 && w[FILE_C]===0 && w[FILE_E]===0) return STRUCTURES.iqpWhite;
+  if(b[FILE_D]>=1 && b[FILE_C]===0 && b[FILE_E]===0) return STRUCTURES.iqpBlack;
+  if(w[FILE_C]>=1 && w[FILE_D]>=1 && w[FILE_B]===0 && w[FILE_E]===0) return STRUCTURES.hangingWhite;
+  if(w[FILE_C]===0 && w[FILE_D]>=1 && b[FILE_E]===0 && b[FILE_D]>=1) return STRUCTURES.carlsbad;
+  if(pawnAt(pos,'c6',ChessEngine.BLACK) && pawnAt(pos,'d5',ChessEngine.BLACK) && pawnAt(pos,'d4',ChessEngine.WHITE)) return STRUCTURES.slavTriangle;
+  if(pawnAt(pos,'d4',ChessEngine.WHITE) && pawnAt(pos,'c4',ChessEngine.WHITE) && pawnAt(pos,'d5',ChessEngine.BLACK)) return STRUCTURES.closedQG;
+  return null;
+}
+
+/* Per-opening strategic briefing — the layer above individual moves. */
+const OPENING_PLANS = {
+  qgd: {
+    scheme:"Knights to c3 and f3, the dark-squared bishop to g5 (pinning f6) or f4 (holding e5), the light-squared bishop to d3, queen to c2, rooks to c1 and d1.",
+    ideas:[
+      "Prepare e3-e4 — the break that turns White's space into an attack.",
+      "Play cxd5 at the right moment to reach the Carlsbad structure and the minority attack.",
+      "Keep after Black's c8-bishop; it is the one piece the whole defence struggles to activate."
+    ],
+    against:"Black wants ...c5 or ...e5 to free the position, and the freeing manoeuvre ...dxc4 followed by ...Nd5. Time your own break so it lands first.",
+    breaks:"e4 for White. ...c5 and ...e5 for Black."
+  },
+  slav: {
+    scheme:"Nf3 and Nc3, e3 to shore up d4, Bxc4 to recover the gambit pawn, a4 to take the b5-square away, then Qe2 and rooks to c1/d1.",
+    ideas:[
+      "Prepare e3-e4 — against the Slav triangle it is the only break with real bite.",
+      "Use a4 and queenside space to keep Black's pieces passive.",
+      "Watch the c-file: it opens the moment pawns come off on c4 or c5."
+    ],
+    against:"Black's whole plan is ...Bf5 or ...Bg4 before ...e6, followed by ...c5 to break out. If Black plays ...e6 first, that bishop is stuck for the rest of the game.",
+    breaks:"e4 for White. ...c5 for Black."
+  },
+  qga: {
+    scheme:"Nf3 and Nc3, e3, Bxc4 recovering the pawn with the bishop already on its best diagonal, then O-O, Qe2 and Rd1.",
+    ideas:[
+      "Regain the c4-pawn on your own terms — chasing it early costs more in tempi than the pawn is worth.",
+      "Expand with e3-e4 once developed; the open position rewards the better-developed side.",
+      "If Black plays ...b5 to hang on to the pawn, look at a4 and the long a8-h1 diagonal."
+    ],
+    against:"Black is playing for ...c5 and ...a6/...b5, aiming for free piece play and queenside space. Positions here open early, so development is worth more than material.",
+    breaks:"e4 for White. ...c5 and ...e5 for Black."
+  },
+  albin: {
+    scheme:"Nf3 defending e5 (never e3 — see the Traps tab), g3 and Bg2 to fight for the light squares, O-O, then Nbd2-b3 to press the d4-pawn.",
+    ideas:[
+      "Blockade the advanced d4-pawn rather than trying to win it by force; it becomes weak once it can't move.",
+      "With Black castling long, open lines on the queenside — but count the race carefully first.",
+      "Hold on to the extra e5-pawn if you can; it cramps Black's kingside."
+    ],
+    against:"Black wants fast development, ...Qd7 and ...O-O-O, then a kingside pawn storm. The d4-pawn is Black's pride and also Black's problem.",
+    breaks:"e3 for White, once properly prepared. ...f6 or ...Nge7-g6 for Black to hit e5."
+  },
+  chigorin: {
+    scheme:"Nf3, then cxd5 forcing a piece recapture, gxf3 accepting doubled pawns for the bishop pair and the open g-file, e3, Nc3 with tempo, and Rb1 on the open b-file.",
+    ideas:[
+      "Trade on d5 early, while Black's blocked c-pawn still can't recapture.",
+      "Value the bishop pair above the pawn structure — that's the bargain this line offers.",
+      "Use the open b- and g-files; they're the compensation for the doubled f-pawns."
+    ],
+    against:"Black is betting on activity: ...Bg4 pinning, ...e5 hitting the centre, and piece pressure before White can consolidate. Don't drift.",
+    breaks:"e4 or d5 for White once consolidated. ...e5 for Black, immediately."
+  }
+};
+
+const WHITE_MISTAKES = [
+  ["Chasing the c4-pawn", "Spending tempi to hang on to a gambit pawn while pieces sit at home. The pawn comes back in almost every line — development doesn't."],
+  ["Breaking too early", "e4 or e5 before the supporting pieces are in place. A premature break just opens lines for the better-developed side, and that may not be you."],
+  ["Ignoring the counter-break", "...c5 and ...e5 are Black's freeing moves in nearly every line here. If you're not watching for them, your space advantage evaporates in one move."],
+  ["Walking into known traps", "The Elephant Trap and the Lasker Trap both punish natural-looking moves. Play through them once in the Traps tab and they stop being dangerous."],
+  ["Careless move order", "Move order decides which defences you allow. 1.d4 Nf6 2.c4 e6 3.Nf3 sidesteps the Nimzo-Indian; 3.Nc3 invites it."]
+];
+
+const MODEL_GAMES = [
+  ["Capablanca – Alekhine", "World Championship 1927", "QGD", "Strategic manoeuvring and endgame technique"],
+  ["Fischer – Spassky", "World Championship 1972", "QGD Exchange", "The minority attack, and central breaks"],
+  ["Kramnik – Topalov", "World Championship 2006", "Semi-Slav, Catalan", "Modern theory and dynamic play"],
+  ["Carlsen – Anand", "World Championship 2013", "QGD, Catalan", "Flexibility and transpositions"],
+  ["Aronian – Anand", "Mexico 2007", "QGA", "Handling open positions"],
+  ["Carlsen – Giri", "Norway Chess 2022", "Slav", "Modern elite practice"]
+];
+
+function buildPlansHTML(opening, cls, display){
+  const plan = OPENING_PLANS[opening.id];
+  let html = '';
+
+  /* ---- 1. what structure is actually on the board right now ---- */
+  if(!state.trapView && display && display.mode==='play'){
+    const st = detectStructure(display.pos);
+    html += `<h2>Structure on the board</h2>`;
+    if(st){
+      html += `<div class="struct">`
+        + `<h3>${escapeHtml(st.name)}</h3>`
+        + `<p class="struct-arises">${escapeHtml(st.arises)}</p>`
+        + `<div class="struct-plans">`
+        +   `<div class="sp sp-w"><span class="sp-t">White's plan</span><p>${escapeHtml(st.white)}</p></div>`
+        +   `<div class="sp sp-b"><span class="sp-t">Black's plan</span><p>${escapeHtml(st.black)}</p></div>`
+        + `</div>`
+        + `<p class="struct-note">${escapeHtml(st.note)}</p>`
+        + `</div>`;
+    } else {
+      html += `<p>The centre hasn't settled into a named structure yet. Keep playing — the moment pawns come off on c4, d5 or e6, this turns into one of the shapes the whole opening is really about, and the plan for both sides will appear here.</p>`;
+    }
+  } else if(state.trapView){
+    html += `<h2>Structure on the board</h2><p>Plans are shown for the live board, not the trap demo. Tap <b>Exit demo</b> in the Traps tab first.</p>`;
+  }
+
+  /* ---- 2. the briefing for this particular opening ---- */
+  if(plan){
+    html += `<h2 style="margin-top:1.4rem">Playing the ${escapeHtml(opening.fullName)}</h2>`;
+    html += `<h3>Where the pieces belong</h3><p>${escapeHtml(plan.scheme)}</p>`;
+    html += `<h3>What White is trying to do</h3><ul class="plan-list">`
+      + plan.ideas.map(i=>`<li>${escapeHtml(i)}</li>`).join('') + `</ul>`;
+    html += `<h3>What Black is trying to do</h3><p>${escapeHtml(plan.against)}</p>`;
+    html += `<h3>The pawn breaks</h3><p>${escapeHtml(plan.breaks)} Timing is the whole art: too early and the break just opens lines for the opponent, too late and they consolidate.</p>`;
+  }
+
+  /* ---- 3. squares that matter across every line ---- */
+  html += `<h2 style="margin-top:1.4rem">Key squares</h2>`;
+  html += `<div class="squares">`
+    + `<div><span class="sq-n mono">d5</span><span>The tension point. Everything in the opening is an argument about this square.</span></div>`
+    + `<div><span class="sq-n mono">e4</span><span>White's main break, and the square that turns space into an attack.</span></div>`
+    + `<div><span class="sq-n mono">c4 / c5</span><span>The queenside battleground — minority attacks and pawn breaks both run through here.</span></div>`
+    + `<div><span class="sq-n mono">e5</span><span>The outpost. A knight landing here is usually worth more than the pawn it cost.</span></div>`
+    + `</div>`;
+
+  /* ---- 4. how White usually goes wrong ---- */
+  html += `<h2 style="margin-top:1.4rem">How White usually goes wrong</h2><div class="fix-list">`;
+  WHITE_MISTAKES.forEach(([t,d])=>{
+    html += `<div class="fix-item"><b>${escapeHtml(t)}.</b> ${escapeHtml(d)}</div>`;
+  });
+  html += `</div>`;
+
+  /* ---- 5. games worth replaying ---- */
+  html += `<h2 style="margin-top:1.4rem">Games worth replaying</h2>`;
+  html += `<div class="games">`;
+  MODEL_GAMES.forEach(([who,where,line,why])=>{
+    html += `<div class="game"><b>${escapeHtml(who)}</b><span class="g-meta mono">${escapeHtml(where)} · ${escapeHtml(line)}</span><span class="g-why">${escapeHtml(why)}</span></div>`;
+  });
+  html += `</div>`;
+  html += `<p style="font-size:.85rem;color:var(--ink-faint);margin-top:.7rem">Any free database — Lichess, 365Chess, chessgames.com — will have all of these to play through move by move.</p>`;
+
+  return html;
+}
+
 function buildTrapsHTML(opening, cls, display){
   let html='';
   if(state.trapView){
@@ -1685,11 +2111,11 @@ function buildTrapsHTML(opening, cls, display){
 
 /* ---------------------------- events ---------------------------- */
 document.getElementById('btnReset').addEventListener('click', ()=>{
-  state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; render();
+  state.sanHistory=[]; state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; render();
 });
 document.getElementById('btnBack').addEventListener('click', ()=>{
   if(state.trapView){ state.trapView=null; } else { state.sanHistory.pop(); }
-  state.selected=null; state.legalTargets=null; render();
+  state.selected=null; state.legalTargets=null; state.promotion=null; render();
 });
 document.getElementById('btnFlip').addEventListener('click', ()=>{ state.flipped=!state.flipped; render(); });
 document.getElementById('btnBookMove').addEventListener('click', ()=>{
@@ -1708,7 +2134,7 @@ document.addEventListener('click', (e)=>{
   if(ttab){ state.activeTutorTab = ttab.dataset.panel; render(); return; }
 
   const jumpBtn = e.target.closest('[data-jump]');
-  if(jumpBtn){ const idx=+jumpBtn.getAttribute('data-jump'); state.sanHistory=state.sanHistory.slice(0, idx+1); state.trapView=null; state.selected=null; state.legalTargets=null; render(); return; }
+  if(jumpBtn){ const idx=+jumpBtn.getAttribute('data-jump'); state.sanHistory=state.sanHistory.slice(0, idx+1); state.trapView=null; state.selected=null; state.legalTargets=null; state.promotion=null; render(); return; }
 
   const playBtn = e.target.closest('[data-play]');
   if(playBtn){ playSanOnHistory(playBtn.getAttribute('data-play')); render(); return; }
@@ -1725,6 +2151,12 @@ document.addEventListener('click', (e)=>{
   if(e.target.closest('[data-trap-prev]') && state.trapView){ state.trapView.index=Math.max(0,state.trapView.index-1); render(); return; }
   if(e.target.closest('[data-trap-next]') && state.trapView){ state.trapView.index=Math.min(state.trapView.trap.moves.length,state.trapView.index+1); render(); return; }
   if(e.target.closest('[data-trap-exit]')){ state.trapView=null; render(); return; }
+
+  const promoBtn = e.target.closest('[data-promote]');
+  if(promoBtn){ choosePromotion(promoBtn.getAttribute('data-promote')); return; }
+  if(e.target.closest('[data-promote-cancel]')){
+    state.promotion=null; state.selected=null; state.legalTargets=null; render(); return;
+  }
 });
 
 render();

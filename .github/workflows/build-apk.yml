@@ -67,10 +67,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create latest \
-            --title "Queen's Gambit Trainer — latest build" \
-            --notes "Debug-signed APK, rebuilt automatically from the newest commit on \`${{ github.ref_name }}\`. Download **queens-gambit-trainer.apk** below on your phone to install it." \
-            || echo "release already exists — updating its asset"
+          TITLE="Queen's Gambit Trainer — latest build"
+          NOTES="Debug-signed APK, rebuilt automatically from the newest commit on \`${{ github.ref_name }}\`. Download **queens-gambit-trainer.apk** below on your phone to install it."
+          # `create` sets the title only when the release does not exist yet, so an
+          # existing release keeps whatever title it was born with. `edit` is the half
+          # that actually keeps it current after a rename.
+          gh release create latest --title "$TITLE" --notes "$NOTES" \
+            || gh release edit latest --title "$TITLE" --notes "$NOTES"
           # The APK was renamed, so clear the old asset out or the release ends up
           # offering two files. Ignored when it isn't there.
           gh release delete-asset latest three-answers-to-c4.apk --yes 2>/dev/null || true

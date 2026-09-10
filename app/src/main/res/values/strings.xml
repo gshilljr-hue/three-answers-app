@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Kept short so it isn't truncated under the launcher icon. -->
-    <string name="app_name">Three Answers</string>
+    <!-- Shown under the launcher icon. Long labels get truncated there by Android;
+         see README.md if you would rather have a shorter one. -->
+    <!-- The apostrophe MUST stay escaped: aapt2 fails the build with
+         "Apostrophe not preceded by \" on a bare ' in a string resource. -->
+    <string name="app_name">Queen\'s Gambit Trainer</string>
 </resources>
